@@ -1,0 +1,24 @@
+{
+    "run": {
+        "sample": {
+            "members": [
+                {
+                    "features_conf_key": "nothing",
+                    "model_flag": "lgbm_rmse"
+                }
+            ],
+            "stacking_key": "single"
+        }
+    },
+    "features": {
+        "nothing": []
+    },
+    "stacking": {
+        "single": [],
+        "linear": [
+            [
+                "linear_rmse"
+            ]
+        ]
+    }
+}
