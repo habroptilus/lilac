@@ -24,7 +24,6 @@ class EnsembleRunnerFactory:
             Model = RidgeRmsleEnsemble
         elif flag == "lgbm_multi":
             Model = LgbmMultiEnsemble
-            self.required_params.append("num_class")
         elif flag == "lr_multi":
             Model = LrMultiEnsemble
         else:

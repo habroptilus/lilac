@@ -6,7 +6,7 @@ class OptunaParamsFactory:
                 'colsample_bytree': trial.suggest_uniform('colsample_bytree', 0.6, 0.95),
                 'subsample': trial.suggest_uniform('subsample', 0.6, 0.95),
                 'max_depth': trial.suggest_int('max_depth', low=3, high=9),
-                'min_child_weight': trial.suggest_loguniform('min_child_weight', low=.1, high=10),
+                'min_child_weight': trial.suggest_loguniform('min_child_weight', low=.5, high=40),
                 'lr': trial.suggest_loguniform('lr', 0.01, 0.3),
                 'random_strength': trial.suggest_int('random_strength', 0, 100),
                 'bagging_temperature': trial.suggest_loguniform('bagging_temperature', 0.01, 100.00),

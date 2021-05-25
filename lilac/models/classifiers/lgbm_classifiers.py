@@ -5,12 +5,12 @@ from lilac.models.base.lgbm_base import _LgbmClassifier
 class LgbmBinaryClassifier(BinaryClassifierBase):
     """目的関数がLoglossのlgbm2値分類モデル.metricは基本loglossだがaccuracyやaucがみたければ指定する."""
 
-    def __init__(self, target_col, verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params):
+    def __init__(self, target_col, verbose_eval, early_stopping_rounds, lgbm_params):
         super().__init__(target_col)
         lgbm_params["objective"] = "binary"
         lgbm_params["metrics"] = "binary_logloss"
         self.model = _LgbmClassifier(
-            verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params)
+            verbose_eval, early_stopping_rounds, lgbm_params)
 
     def fit(self, train_df, valid_df):
         train_x, train_y = self.split_df2xy(train_df)
@@ -32,13 +32,12 @@ class LgbmBinaryClassifier(BinaryClassifierBase):
 class LgbmMultiClassifier(MultiClassifierBase):
     """目的関数がLoglossのlgbm多値分類モデル.metricは基本loglossだがaccuracyやaucがみたければ指定する."""
 
-    def __init__(self, target_col, verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params, num_class):
+    def __init__(self, target_col, verbose_eval, early_stopping_rounds, lgbm_params):
         super().__init__(target_col)
         lgbm_params["objective"] = "multiclass"
         lgbm_params["metrics"] = "multi_logloss"
-        lgbm_params["num_class"] = num_class
         self.model = _LgbmClassifier(
-            verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params)
+            verbose_eval, early_stopping_rounds, lgbm_params)
 
     def fit(self, train_df, valid_df):
         train_x, train_y = self.split_df2xy(train_df)

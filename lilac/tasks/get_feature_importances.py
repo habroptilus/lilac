@@ -17,13 +17,13 @@ class GetFeatureImportances(luigi.Task):
     group_kfolds_col = luigi.Parameter()
     evaluator_flag = luigi.Parameter()
     verbose_eval = luigi.IntParameter()
-    num_boost_round = luigi.IntParameter()
+    n_estimators = luigi.IntParameter()
     early_stopping_rounds = luigi.IntParameter()
     trainer_flag = luigi.Parameter()  # selfは指定不可
     bagging_num = luigi.IntParameter()
     base_class = luigi.IntParameter()
     allow_less_than_base = luigi.BoolParameter()
-    num_class = luigi.IntParameter()
+    class_weight = luigi.Parameter(default=None)
 
     # Feature Selection特有
     importance_flag = luigi.Parameter()
@@ -66,7 +66,6 @@ class GetFeatureImportances(luigi.Task):
             "model_params": {
                 "target_col": self.target_col,
                 "verbose_eval": self.verbose_eval,
-                "num_boost_round": self.num_boost_round,
                 "early_stopping_rounds": self.early_stopping_rounds,
                 "seed": self.seed,
                 "lgbm_params": {
@@ -76,9 +75,10 @@ class GetFeatureImportances(luigi.Task):
                     "reg_lambda": self.fs_reg_lambda,
                     "subsample": self.fs_subsample,
                     "min_child_weight": self.fs_min_child_weight,
-                    "num_leaves": int(2 ** (self.fs_max_depth) * 0.7)
-                },
-                "num_class": self.num_class
+                    "num_leaves": int(2 ** (self.fs_max_depth) * 0.7),
+                    "n_estimators": self.n_estimators,
+                    "class_weight": self.class_weight
+                }
             },
             "folds_gen_params": {
                 "fold_num": self.fold_num,

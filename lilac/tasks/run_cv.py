@@ -49,9 +49,7 @@ class RunCv(luigi.Task):
         model_params = {
             "target_col": self.target_col,
             "verbose_eval": self.verbose_eval,
-            "num_boost_round": self.num_boost_round,
             "early_stopping_rounds": self.early_stopping_rounds,
-            "num_class": self.num_class,
             "lgbm_params": {
                 "colsample_bytree": self.colsample_bytree,
                 "max_depth": self.max_depth,
@@ -59,7 +57,9 @@ class RunCv(luigi.Task):
                 "reg_lambda": self.reg_lambda,
                 "subsample": self.subsample,
                 "min_child_weight": self.min_child_weight,
-                "num_leaves": int(2 ** (self.max_depth) * 0.7)
+                "num_leaves": int(2 ** (self.max_depth) * 0.7),
+                "n_estimators": self.n_estimators,
+                "class_weight": self.class_weight
             },
             "xgb_params": {
                 'random_state': self.seed,

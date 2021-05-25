@@ -32,7 +32,6 @@ class RmseEvaluator(EvaluatorBase):
 
     def run(self, df, pred, raw_pred):
         y = df[self.target_col]
-        pred = pred, raw_pred.predict(df)
         return np.sqrt(mean_squared_error(y, pred))
 
 

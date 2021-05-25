@@ -57,8 +57,7 @@ def run_tasks(Task, members, n_trials, stackings, base_params, token, app_name, 
     # stacking
     stacking_runner = StackingRunner(
         stackings, base_params["target_col"], base_params["folds_generator_flag"], folds_gen_params,
-        base_params["trainer_flag"], trainer_params,
-        base_params["num_class"])
+        base_params["trainer_flag"], trainer_params)
     result = stacking_runner.run(output_list, train, test)
     return result
 
