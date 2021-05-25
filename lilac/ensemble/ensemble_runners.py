@@ -158,7 +158,6 @@ class LgbmMultiEnsemble(_EnsembleRunnerBase):
                 "min_child_weight": 1.0
             },
         }
-        trainer_params = {}
         super().__init__(target_col, "f1_macro", trainer_flag, "lgbm_multi",
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
