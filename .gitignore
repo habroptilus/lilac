@@ -131,4 +131,4 @@ dmypy.json
 catboost_info
 data
 result
-lilac/*/__pycache__/
+__pycache__
