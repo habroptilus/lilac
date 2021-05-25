@@ -6,30 +6,30 @@ import numpy as np
 class _LgbmBase:
     """LGBMのベース"""
 
-    def __init__(self, verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params):
+    def __init__(self, verbose_eval, early_stopping_rounds, lgbm_params):
         self.lgbm_params = lgbm_params
         self.verbose_eval = verbose_eval
-        self.num_boost_round = num_boost_round
         self.early_stopping_rounds = early_stopping_rounds
+        self.model = self.get_model()
+
+    def get_model(self):
+        raise Exception("Implement please.")
 
     def fit(self, train_x, train_y, valid_x, valid_y):
         train_x = self.object2category(train_x)
         valid_x = self.object2category(valid_x)
-        lgb_train = lgb.Dataset(train_x, train_y)
-        lgb_valid = lgb.Dataset(valid_x, valid_y, reference=lgb_train)
         self.cols = list(train_x.columns)
+        self.model.fit(train_x, train_y,
+                       eval_set=[(train_x, train_y), (valid_x, valid_y)],
+                       eval_names=["train", "valid"],
+                       early_stopping_rounds=self.early_stopping_rounds,
+                       verbose=self.verbose_eval)
 
-        self.model = lgb.train(self.lgbm_params, lgb_train,
-                               valid_names=["train", "valid"], valid_sets=[lgb_train, lgb_valid],
-                               verbose_eval=self.verbose_eval,
-                               num_boost_round=self.num_boost_round,
-                               early_stopping_rounds=self.early_stopping_rounds,
-                               )
         return self
 
     def get_importance(self):
         """特徴量の重要度を出力する."""
-        return pd.DataFrame(self.model.feature_importance(importance_type='gain'), index=self.cols, columns=['importance'])
+        return pd.DataFrame(self.model.feature_importances_, index=self.cols, columns=['importance'])
 
     def object2category(self, df):
         """object型のカラムをcategory型に変換する."""
@@ -42,32 +42,16 @@ class _LgbmBase:
         return "lgbm_"+"_".join([str(v) for v in self.lgbm_params.values()])
 
 
-class _LgbmBinaryClassifier(_LgbmBase):
-    """ベースとなるLGBMのbinary分類モデル."""
-
-    def __init__(self, verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params):
-        super().__init__(verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params)
-
-    def predict_proba(self, test):
-        test = self.object2category(test)
-        raw_pred = self.model.predict(
-            test, num_iteration=self.model.best_iteration)
-        return raw_pred
-
-    def return_flag(self):
-        return f"{super().return_flag()}_cls"
-
-
 class _LgbmClassifier(_LgbmBase):
     """ベースとなるLGBMのclassifierモデル."""
 
-    def __init__(self, verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params):
-        super().__init__(verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params)
+    def get_model(self):
+        return lgb.LGBMClassifier(**self.lgbm_params)
 
     def predict_proba(self, test):
         test = self.object2category(test)
-        raw_pred = self.model.predict(
-            test, num_iteration=self.model.best_iteration)
+        raw_pred = self.model.predict_proba(
+            test, num_iteration=self.model.best_iteration_)
         return raw_pred
 
     def return_flag(self):
@@ -77,10 +61,13 @@ class _LgbmClassifier(_LgbmBase):
 class _LgbmRegressor(_LgbmBase):
     """ベースとなるLGBMの回帰モデル."""
 
+    def get_model(self):
+        return lgb.LGBMRegressor(**self.lgbm_params)
+
     def predict(self, test):
         test = self.object2category(test)
         raw_pred = self.model.predict(
-            test, num_iteration=self.model.best_iteration)
+            test, num_iteration=self.model.best_iteration_)
         return raw_pred
 
     def return_flag(self):

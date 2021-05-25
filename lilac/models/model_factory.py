@@ -16,24 +16,24 @@ class ModelFactory:
         # regressor
         if model_str == "lgbm_rmsle":
             self.required_params.extend(
-                ["verbose_eval", "num_boost_round", "early_stopping_rounds", "lgbm_params"])
+                ["verbose_eval",  "early_stopping_rounds", "lgbm_params"])
             self.Model = LgbmRmsleRegressor
         elif model_str == "lgbm_rmse":
             self.required_params.extend(
-                ["verbose_eval", "num_boost_round", "early_stopping_rounds", "lgbm_params"])
+                ["verbose_eval", "early_stopping_rounds", "lgbm_params"])
             self.Model = LgbmRmseRegressor
         elif model_str == "lgbm_mae":
             self.required_params.extend(
-                ["verbose_eval", "num_boost_round", "early_stopping_rounds", "lgbm_params"])
+                ["verbose_eval", "early_stopping_rounds", "lgbm_params"])
             self.Model = LgbmMaeRegressor
         # classifier
         elif model_str == "lgbm_bin":
             self.required_params.extend(
-                ["verbose_eval", "num_boost_round", "early_stopping_rounds", "lgbm_params"])
+                ["verbose_eval", "early_stopping_rounds", "lgbm_params"])
             self.Model = LgbmBinaryClassifier
         elif model_str == "lgbm_multi":
             self.required_params.extend(
-                ["verbose_eval", "num_boost_round", "early_stopping_rounds", "lgbm_params", "num_class"])
+                ["verbose_eval", "early_stopping_rounds", "lgbm_params"])
             self.Model = LgbmMultiClassifier
         # xgb
         elif model_str == "xgb_rmse":

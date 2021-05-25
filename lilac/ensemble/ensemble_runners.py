@@ -143,7 +143,7 @@ class LgbmMultiEnsemble(_EnsembleRunnerBase):
     多クラス予測確率ベクトルを横に結合して次の層のモデルの特徴に使う.
     """
 
-    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, num_class):
+    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params):
         model_params = {"seed": 42}
         model_params = {
             "verbose_eval": 100,
@@ -155,8 +155,7 @@ class LgbmMultiEnsemble(_EnsembleRunnerBase):
                 "reg_alpha": 0,
                 "reg_lambda": 0,
                 "subsample": 0.8,
-                "min_child_weight": 1.0,
-                "num_class": num_class
+                "min_child_weight": 1.0
             },
         }
         trainer_params = {}

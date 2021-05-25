@@ -5,10 +5,10 @@ from lilac.models.base.lgbm_base import _LgbmRegressor, _LgbmRmsleRegressor
 class LgbmRmsleRegressor(RegressorBase):
     """目的関数がRMSLEのlgbm回帰モデル."""
 
-    def __init__(self, target_col, verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params):
+    def __init__(self, target_col, verbose_eval, early_stopping_rounds, lgbm_params):
         super().__init__(target_col)
         self.model = _LgbmRmsleRegressor(
-            verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params)
+            verbose_eval, early_stopping_rounds, lgbm_params)
 
     def fit(self, train_df, valid_df):
         train_x, train_y = self.split_df2xy(train_df)
@@ -32,12 +32,12 @@ class LgbmRmsleRegressor(RegressorBase):
 class LgbmRmseRegressor(RegressorBase):
     """目的関数がRMSEのlgbm回帰モデル."""
 
-    def __init__(self, target_col, verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params):
+    def __init__(self, target_col, verbose_eval, early_stopping_rounds, lgbm_params):
         super().__init__(target_col)
         lgbm_params["objective"] = "regression"
         lgbm_params["metrics"] = "rmse"
         self.model = _LgbmRegressor(
-            verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params)
+            verbose_eval, early_stopping_rounds, lgbm_params)
 
     def fit(self, train_df, valid_df):
         train_x, train_y = self.split_df2xy(train_df)
@@ -59,12 +59,12 @@ class LgbmRmseRegressor(RegressorBase):
 class LgbmMaeRegressor(RegressorBase):
     """目的関数がMAEのlgbm回帰モデル."""
 
-    def __init__(self, target_col, verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params):
+    def __init__(self, target_col, verbose_eval, early_stopping_rounds, lgbm_params):
         super().__init__(target_col)
         lgbm_params["objective"] = "regression_l1"
         lgbm_params["metrics"] = "mae"
         self.model = _LgbmRegressor(
-            verbose_eval, num_boost_round, early_stopping_rounds, lgbm_params)
+            verbose_eval, early_stopping_rounds, lgbm_params)
 
     def fit(self, train_df, valid_df):
         train_x, train_y = self.split_df2xy(train_df)

@@ -4,14 +4,13 @@ from lilac.ensemble.ensemble_runner_factory import EnsembleRunnerFactory
 class StackingRunner:
     """1段目の出力を受け取り,stackingを実行する."""
 
-    def __init__(self, stackings, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, num_class):
+    def __init__(self, stackings, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params):
         """stackings : どのモデルを使って何層stackingするか."""
         self.stackings = stackings
         params = {"target_col": target_col, "folds_generator_flag":
                   folds_generator_flag, "folds_gen_params": folds_gen_params,
                   "trainer_flag":  trainer_flag,
-                  "trainer_params": trainer_params,
-                  "num_class": num_class}
+                  "trainer_params": trainer_params}
         self.factory = EnsembleRunnerFactory(params)
 
     def run(self, output_list, train, test):
