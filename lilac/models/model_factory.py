@@ -6,6 +6,7 @@ from .regressors.random_forest_regressors import RandomForestRmseRegressor, Rand
 from .classifiers.lgbm_classifiers import LgbmBinaryClassifier, LgbmMultiClassifier
 from .classifiers.logistic_regression import LrMultiClassifier
 from .classifiers.catb_classifiers import CatbBinaryClassifier, CatbMultiClassifier
+from .classifiers.averaging_classifiers import AveragingBinaryClassifier, AveragingMultiClassifier
 
 
 class ModelFactory:
@@ -82,6 +83,12 @@ class ModelFactory:
             self.Model = RidgeRmsle
         elif model_str == "lr_multi":
             self.Model = LrMultiClassifier
+        # averaging
+        elif model_str == "avg_bin":
+            self.Model = AveragingBinaryClassifier
+        elif model_str == "avg_multi":
+            self.Model = AveragingMultiClassifier
+            self.required_params.append("group_prefix")
         else:
             raise Exception(f"Invalid model flag {model_str}")
 

@@ -3,7 +3,8 @@ from lilac.ensemble.ensemble_runners import (LgbmMultiEnsemble,
                                              LinearRmsleEnsemble,
                                              LrMultiEnsemble,
                                              RandomForestRmsleEnsemble,
-                                             RidgeRmsleEnsemble)
+                                             RidgeRmsleEnsemble,
+                                             AveragingMultiEnsemble)
 
 
 class EnsembleRunnerFactory:
@@ -26,6 +27,8 @@ class EnsembleRunnerFactory:
             Model = LgbmMultiEnsemble
         elif flag == "lr_multi":
             Model = LrMultiEnsemble
+        elif flag == "avg_multi":
+            Model = AveragingMultiEnsemble
         else:
             raise Exception(f"Invalid ensemble flag: {flag}")
 
