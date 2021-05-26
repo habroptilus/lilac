@@ -50,6 +50,7 @@ class RunCv(luigi.Task):
             "target_col": self.target_col,
             "verbose_eval": self.verbose_eval,
             "early_stopping_rounds": self.early_stopping_rounds,
+            "class_weight": self.class_weight,
             "lgbm_params": {
                 "colsample_bytree": self.colsample_bytree,
                 "max_depth": self.max_depth,
@@ -58,8 +59,7 @@ class RunCv(luigi.Task):
                 "subsample": self.subsample,
                 "min_child_weight": self.min_child_weight,
                 "num_leaves": int(2 ** (self.max_depth) * 0.7),
-                "n_estimators": self.n_estimators,
-                "class_weight": self.class_weight
+                "n_estimators": self.n_estimators
             },
             "xgb_params": {
                 'random_state': self.seed,
@@ -77,7 +77,8 @@ class RunCv(luigi.Task):
                 'bagging_temperature': self.bagging_temperature,
                 'od_type': self.od_type,
                 'od_wait': self.od_wait,
-                "random_seed": self.seed
+                "random_seed": self.seed,
+                'num_boost_round': self.n_estimators
             }
         }
         trainer_params = {

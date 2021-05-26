@@ -68,6 +68,7 @@ class GetFeatureImportances(luigi.Task):
                 "verbose_eval": self.verbose_eval,
                 "early_stopping_rounds": self.early_stopping_rounds,
                 "seed": self.seed,
+                "class_weight": self.class_weight,
                 "lgbm_params": {
                     "colsample_bytree": self.fs_colsample_bytree,
                     "max_depth": self.fs_max_depth,
@@ -76,8 +77,7 @@ class GetFeatureImportances(luigi.Task):
                     "subsample": self.fs_subsample,
                     "min_child_weight": self.fs_min_child_weight,
                     "num_leaves": int(2 ** (self.fs_max_depth) * 0.7),
-                    "n_estimators": self.n_estimators,
-                    "class_weight": self.class_weight
+                    "n_estimators": self.n_estimators
                 }
             },
             "folds_gen_params": {

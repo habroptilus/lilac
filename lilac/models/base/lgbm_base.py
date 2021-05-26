@@ -45,6 +45,10 @@ class _LgbmBase:
 class _LgbmClassifier(_LgbmBase):
     """ベースとなるLGBMのclassifierモデル."""
 
+    def __init__(self, verbose_eval, early_stopping_rounds, lgbm_params, class_weight):
+        lgbm_params["class_weight"] = class_weight
+        super().__init__(verbose_eval, early_stopping_rounds, lgbm_params)
+
     def get_model(self):
         return lgb.LGBMClassifier(**self.lgbm_params)
 

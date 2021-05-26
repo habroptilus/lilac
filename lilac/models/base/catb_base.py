@@ -3,12 +3,13 @@ import numpy as np
 
 
 class _CatbBase:
-    Model = None
+    """CatBoostの基底クラス."""
 
-    def __init__(self, loss, early_stopping_rounds, catb_params):
+    def __init__(self, loss_function, early_stopping_rounds, catb_params):
         self.early_stopping_rounds = early_stopping_rounds
+        catb_params["loss_function"] = loss_function
         self.catb_params = catb_params
-        self.loss = loss
+        self.model = self.get_model()
 
     def fit(self, train_x, train_y, valid_x, valid_y):
         train_x = self.transform(train_x)
@@ -22,7 +23,6 @@ class _CatbBase:
         validate_pool = Pool(
             valid_x, valid_y, cat_features=self.categorical_features_indices)
 
-        self.model = self.Model(loss_function=self.loss, **self.catb_params)
         self.model.fit(train_pool,
                        eval_set=validate_pool,
                        early_stopping_rounds=self.early_stopping_rounds,
@@ -41,9 +41,12 @@ class _CatbBase:
     def return_flag(self):
         return "catb_"+"_".join([str(v) for v in self.catb_params.values()])
 
+    def get_model(self):
+        raise Exception("Implement please.")
+
 
 class _CatbRegressor(_CatbBase):
-    Model = CatBoostRegressor
+    """CatBoostの回帰モデル."""
 
     def predict(self, test):
         test = self.transform(test)
@@ -53,12 +56,39 @@ class _CatbRegressor(_CatbBase):
     def return_flag(self):
         return f"{super().return_flag()}_reg"
 
+    def get_model(self):
+        return CatBoostRegressor(**self.catb_params)
+
+
+class _CatbBinaryClassfier(_CatbBase):
+    """CatBoostの2クラス分類モデル."""
+    Model = CatBoostClassifier
+
+    def __init__(self, early_stopping_rounds, catb_params):
+        super().__init__("Logloss", early_stopping_rounds, catb_params)
+
+    def predict(self, test):
+        test = self.transform(test)
+        test_pool = Pool(test, cat_features=self.categorical_features_indices)
+        return self.model.predict(test_pool)
+
+    def predict_proba(self, test):
+        test = self.transform(test)
+        test_pool = Pool(test, cat_features=self.categorical_features_indices)
+        return self.model.predict_proba(test_pool)
+
+    def return_flag(self):
+        return f"{super().return_flag()}_bin"
+
+    def get_model(self):
+        return CatBoostClassifier(**self.catb_params)
+
 
 class _CatbMultiClassfier(_CatbBase):
     """CatBoostの多クラス分類モデル."""
     Model = CatBoostClassifier
 
-    def __init__(self,  early_stopping_rounds, catb_params):
+    def __init__(self, early_stopping_rounds, catb_params):
         super().__init__("MultiClass", early_stopping_rounds, catb_params)
 
     def predict(self, test):
@@ -73,6 +103,9 @@ class _CatbMultiClassfier(_CatbBase):
 
     def return_flag(self):
         return f"{super().return_flag()}_multi"
+
+    def get_model(self):
+        return CatBoostClassifier(**self.catb_params)
 
 
 class _CatbRmsleRegressor(_CatbRegressor):
