@@ -6,9 +6,10 @@ from lilac.models.model_base import BinaryClassifierBase, MultiClassifierBase
 class CatbBinaryClassifier(BinaryClassifierBase):
     """目的関数がLoglossのcatboost2値分類モデル."""
 
-    def __init__(self, target_col,  early_stopping_rounds, catb_params):
+    def __init__(self, target_col,  early_stopping_rounds, catb_params, class_weight):
         super().__init__(target_col)
-        self.model = _CatbBinaryClassfier(early_stopping_rounds, catb_params)
+        self.model = _CatbBinaryClassfier(
+            early_stopping_rounds, catb_params, class_weight)
 
     def fit(self, train_df, valid_df):
         train_x, train_y = self.split_df2xy(train_df)
@@ -26,9 +27,10 @@ class CatbBinaryClassifier(BinaryClassifierBase):
 class CatbMultiClassifier(MultiClassifierBase):
     """目的関数がLoglossのcatboost多値分類モデル."""
 
-    def __init__(self, target_col,  early_stopping_rounds, catb_params):
+    def __init__(self, target_col,  early_stopping_rounds, catb_params, class_weight):
         super().__init__(target_col)
-        self.model = _CatbMultiClassfier(early_stopping_rounds, catb_params)
+        self.model = _CatbMultiClassfier(
+            early_stopping_rounds, catb_params, class_weight)
 
     def fit(self, train_df, valid_df):
         train_x, train_y = self.split_df2xy(train_df)

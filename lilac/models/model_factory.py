@@ -53,11 +53,11 @@ class ModelFactory:
             self.Model = CatbRmsleRegressor
         elif model_str == "catb_bin":
             self.required_params.extend(
-                ["early_stopping_rounds", "catb_params"])
+                ["early_stopping_rounds", "catb_params", "class_weight"])
             self.Model = CatbBinaryClassifier
         elif model_str == "catb_multi":
             self.required_params.extend(
-                ["early_stopping_rounds", "catb_params"])
+                ["early_stopping_rounds", "catb_params", "class_weight"])
             self.Model = CatbMultiClassifier
         # random forest
         elif model_str == "rf_rmse":
