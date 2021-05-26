@@ -42,6 +42,7 @@ def run_stacking(stackings, base_params, tasks, output_list):
     layers = stackings["layers"]
     ensemble_params = stackings.get("params")
     if ensemble_params:
+        print(f"Update params with : {ensemble_params}")
         base_params.update(ensemble_params)
 
     # １つ目のrunで使ったデータセットの、特徴量選択前を使う
