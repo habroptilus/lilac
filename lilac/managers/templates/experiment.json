@@ -14,7 +14,9 @@
         "nothing": []
     },
     "stacking": {
-        "single": [],
+        "single": {
+            "layers": []
+        },
         "linear": {
             "layers": [
                 [
