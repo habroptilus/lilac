@@ -5,7 +5,7 @@ from .regressors.xgb_regressors import XgbRmseRegressor, XgbRmsleRegressor
 from .regressors.random_forest_regressors import RandomForestRmseRegressor, RandomForestMaeRegressor, RandomForestRmsleRegressor
 from .classifiers.lgbm_classifiers import LgbmBinaryClassifier, LgbmMultiClassifier
 from .classifiers.logistic_regression import LrMultiClassifier
-from .classifiers.catb_classifiers import CatbMultiClassifier
+from .classifiers.catb_classifiers import CatbBinaryClassifier, CatbMultiClassifier
 
 
 class ModelFactory:
@@ -13,7 +13,6 @@ class ModelFactory:
         self.params = params
         self.required_params = ["target_col"]
         # lgbm
-        # regressor
         if model_str == "lgbm_rmsle":
             self.required_params.extend(
                 ["verbose_eval",  "early_stopping_rounds", "lgbm_params"])
@@ -26,14 +25,13 @@ class ModelFactory:
             self.required_params.extend(
                 ["verbose_eval", "early_stopping_rounds", "lgbm_params"])
             self.Model = LgbmMaeRegressor
-        # classifier
         elif model_str == "lgbm_bin":
             self.required_params.extend(
-                ["verbose_eval", "early_stopping_rounds", "lgbm_params"])
+                ["verbose_eval", "early_stopping_rounds", "lgbm_params", "class_weight"])
             self.Model = LgbmBinaryClassifier
         elif model_str == "lgbm_multi":
             self.required_params.extend(
-                ["verbose_eval", "early_stopping_rounds", "lgbm_params"])
+                ["verbose_eval", "early_stopping_rounds", "lgbm_params", "class_weight"])
             self.Model = LgbmMultiClassifier
         # xgb
         elif model_str == "xgb_rmse":
@@ -53,9 +51,13 @@ class ModelFactory:
             self.required_params.extend(
                 ["early_stopping_rounds", "catb_params"])
             self.Model = CatbRmsleRegressor
+        elif model_str == "catb_bin":
+            self.required_params.extend(
+                ["early_stopping_rounds", "catb_params", "class_weight"])
+            self.Model = CatbBinaryClassifier
         elif model_str == "catb_multi":
             self.required_params.extend(
-                ["early_stopping_rounds", "catb_params"])
+                ["early_stopping_rounds", "catb_params", "class_weight"])
             self.Model = CatbMultiClassifier
         # random forest
         elif model_str == "rf_rmse":
@@ -68,7 +70,6 @@ class ModelFactory:
             self.required_params.append("seed")
             self.Model = RandomForestMaeRegressor
         # linear
-        # regressor
         elif model_str == "linear_rmsle":
             self.Model = LinearRmsle
         elif model_str == "linear_rmse":
@@ -79,7 +80,6 @@ class ModelFactory:
             self.Model = RidgeModel
         elif model_str == "ridge_rmsle":
             self.Model = RidgeRmsle
-        # classifier
         elif model_str == "lr_multi":
             self.Model = LrMultiClassifier
         else:
