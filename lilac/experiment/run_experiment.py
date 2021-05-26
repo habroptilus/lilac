@@ -11,7 +11,7 @@ from lilac.evaluators.evaluator_factory import EvaluatorFactory
 import os
 
 
-def run_tasks(Task, members, n_trials, stackings, base_params, token, app_name, channel, do_notify, do_plot, tune_fs, tune_th):
+def run_tasks(Task, members, n_trials,  base_params, token, app_name, channel, do_notify, do_plot, tune_fs, tune_th):
     # 使用するevaluatorからdirectionを作成
     direction = EvaluatorFactory(base_params["target_col"]).run(
         base_params["evaluator_flag"]).get_direction()
@@ -35,31 +35,25 @@ def run_tasks(Task, members, n_trials, stackings, base_params, token, app_name, 
             f"[{', '.join(map(str,members[i].values()))}]: {output['evaluator']} = {output['score']}")
     print("=============================")
 
+    return tasks, output_list
+
+
+def run_stacking(stackings, base_params, tasks, output_list):
+    layers = stackings["layers"]
+    ensemble_params = stackings.get("params")
+    if ensemble_params:
+        base_params.update(ensemble_params)
+
     # １つ目のrunで使ったデータセットの、特徴量選択前を使う
     # group kfoldの特徴量がない可能性があるため.
     path = Path(tasks[0].output().path)
     train = pd.read_csv(path.parent.parent.parent/"train.csv")
     test = pd.read_csv(path.parent.parent.parent/"test.csv")
 
-    # key_colはgroup kfoldのときに使われる
-    folds_gen_params = {"fold_num":  base_params["fold_num"],
-                        "seed":  base_params["seed"],
-                        "key_col":  base_params["group_kfolds_col"],
-                        "target_col": base_params["target_col"]}
-    trainer_params = {
-        "target_col": base_params["target_col"],
-        "bagging_num": base_params["bagging_num"],
-        "base_class": base_params["base_class"],
-        "seed": base_params["seed"],
-        "allow_less_than_base": base_params["allow_less_than_base"]
-    }
-
     # stacking
     stacking_runner = StackingRunner(
-        stackings, base_params["target_col"], base_params["folds_generator_flag"], folds_gen_params,
-        base_params["trainer_flag"], trainer_params)
-    result = stacking_runner.run(output_list, train, test)
-    return result
+        layers, base_params)
+    return stacking_runner.run(output_list, train, test)
 
 
 def run_experiment(args):
@@ -73,8 +67,12 @@ def run_experiment(args):
     stackings = config["stacking"][config["run"][args.key]["stacking_key"]]
     token = os.environ["SLACK_TOKEN"]
 
-    result = run_tasks(RunCv, members, args.trials, stackings,
-                       base_params, token, args.app_name, args.channel, args.notify, args.plot, args.tune_fs, args.tune_th)
+    # tasks実行
+    tasks, output_list = run_tasks(RunCv, members, args.trials,
+                                   base_params, token, args.app_name, args.channel, args.notify, args.plot, args.tune_fs, args.tune_th)
+
+    # stacking実行
+    result = run_stacking(stackings, base_params, tasks, output_list)
 
     output_path = f"{args.output_dir}/{args.key}_{args.trials}_{args.tune_fs}_{args.tune_th}.json"
 

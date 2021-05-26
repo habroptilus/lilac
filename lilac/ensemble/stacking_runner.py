@@ -4,13 +4,26 @@ from lilac.ensemble.ensemble_runner_factory import EnsembleRunnerFactory
 class StackingRunner:
     """1段目の出力を受け取り,stackingを実行する."""
 
-    def __init__(self, stackings, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params):
+    def __init__(self, stackings, base_params):
         """stackings : どのモデルを使って何層stackingするか."""
+        # key_colはgroup kfoldのときに使われる
         self.stackings = stackings
-        params = {"target_col": target_col, "folds_generator_flag":
-                  folds_generator_flag, "folds_gen_params": folds_gen_params,
-                  "trainer_flag":  trainer_flag,
-                  "trainer_params": trainer_params}
+        params = {
+            "target_col": base_params["target_col"],
+            "folds_generator_flag": base_params["folds_generator_flag"],
+            "folds_gen_params": {"fold_num":  base_params["fold_num"],
+                                 "seed":  base_params["seed"],
+                                 "key_col":  base_params["group_kfolds_col"],
+                                 "target_col": base_params["target_col"]},
+            "trainer_flag":  base_params["trainer_flag"],
+            "trainer_params": {
+                "target_col": base_params["target_col"],
+                "bagging_num": base_params["bagging_num"],
+                "base_class": base_params["base_class"],
+                "seed": base_params["seed"],
+                "allow_less_than_base": base_params["allow_less_than_base"]
+            }
+        }
         self.factory = EnsembleRunnerFactory(params)
 
     def run(self, output_list, train, test):
