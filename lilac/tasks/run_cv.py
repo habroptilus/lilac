@@ -59,7 +59,8 @@ class RunCv(luigi.Task):
                 "subsample": self.subsample,
                 "min_child_weight": self.min_child_weight,
                 "num_leaves": int(2 ** (self.max_depth) * 0.7),
-                "n_estimators": self.n_estimators
+                "n_estimators": self.n_estimators,
+                "random_state": self.seed
             },
             "xgb_params": {
                 'random_state': self.seed,

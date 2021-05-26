@@ -11,7 +11,7 @@ class FeatureSelector:
         thresholdがnoneの場合はimportanceが0でない特徴量を抽出する
         """
         if self.threshold is None:
-            print("Selected features with importance>0 since threshold=None")
+            print("Selected features with importance > 0 since threshold is None")
             selected_cols = list(
                 importance[importance["importance"] > 0].index)
         else:
