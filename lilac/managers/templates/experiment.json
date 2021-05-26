@@ -15,10 +15,13 @@
     },
     "stacking": {
         "single": [],
-        "linear": [
-            [
-                "linear_rmse"
-            ]
-        ]
+        "linear": {
+            "layers": [
+                [
+                    "lr_multi"
+                ]
+            ],
+            "params": {}
+        }
     }
 }
