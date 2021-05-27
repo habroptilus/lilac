@@ -83,6 +83,7 @@ class ModelFactory:
             self.Model = RidgeRmsle
         elif model_str == "lr_multi":
             self.Model = LrMultiClassifier
+            self.required_params.append("class_weight")
         # averaging
         elif model_str == "avg_bin":
             self.Model = AveragingBinaryClassifier

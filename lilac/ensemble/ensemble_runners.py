@@ -44,7 +44,7 @@ class LrMultiEnsemble(_EnsembleRunnerBase):
     """LrMultiClassifierを使ってアンサンブルする."""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params):
-        model_params = {}
+        model_params = {"class_weight": None}
         super().__init__(target_col, "f1_macro", trainer_flag, "lr_multi",
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
@@ -171,10 +171,10 @@ class LgbmMultiEnsemble(_EnsembleRunnerBase):
         model_params = {"seed": 42}
         model_params = {
             "verbose_eval": 100,
-            "num_boost_round": 1000,
-            "early_stopping_rounds": 100,
+            "early_stopping_rounds": 20,
             "class_weight": "balanced",
             "lgbm_params": {
+                "n_estimators": 2000,
                 "colsample_bytree": 0.8,
                 "max_depth": 5,
                 "reg_alpha": 0,
