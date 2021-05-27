@@ -147,7 +147,6 @@ class LgbmRmsleEnsemble(_EnsembleRunnerBase):
                 "min_child_weight": 1.0,
             },
         }
-        trainer_params = {}
         super().__init__(target_col, "rmsle", trainer_flag, "lgbm_rmsle",
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
@@ -174,6 +173,7 @@ class LgbmMultiEnsemble(_EnsembleRunnerBase):
             "verbose_eval": 100,
             "num_boost_round": 1000,
             "early_stopping_rounds": 100,
+            "class_weight": "balanced",
             "lgbm_params": {
                 "colsample_bytree": 0.8,
                 "max_depth": 5,
