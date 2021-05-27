@@ -97,9 +97,7 @@ class RunCv(luigi.Task):
             self.trainer_flag, trainer_params)
         self.folds_generator = FoldsGeneratorFactory().run(
             self.folds_generator_flag, folds_gen_params)
-
-        return f"{self.model_factory.run().return_flag()}_{self.trainer_factory.run().return_flag()}_"
-        +f"{self.folds_generator.return_flag()}_{self.evaluator_flag}_{self.threshold}"
+        return f"{self.model_factory.run().return_flag()}_{self.trainer_factory.run().return_flag()}_{self.folds_generator.return_flag()}_{self.evaluator_flag}_{self.threshold}"
 
     def run(self):
         before_dropped = pd.read_csv(self.input()[0][0].path)
