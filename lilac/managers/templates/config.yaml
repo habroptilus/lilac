@@ -5,7 +5,6 @@ experiment_path: experiment.json
 target_col: y
 evaluator_flag: rmse
 feature_importance_model_flag: lgbm_rmse
-num_class: 8
 importance_flag: mean # mean, null_importance
 null_importance_trials: 10
 trainer_flag: basic # basic, down_sample_bagging
