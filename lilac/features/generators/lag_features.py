@@ -10,7 +10,7 @@ class LagFeatures(FeaturesBase):
     などの仮定が置かれている
     """
 
-    def __init__(self,  key_col, target_cols, lag_ranges, features_dir=None,):
+    def __init__(self,  key_col, target_cols, lag_ranges, features_dir=None):
         self.key_col = key_col
         self.target_cols = target_cols
         self.lag_ranges = lag_ranges
