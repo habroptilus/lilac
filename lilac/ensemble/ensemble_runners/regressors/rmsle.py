@@ -26,20 +26,7 @@ class RidgeRmsleEnsemble(_EnsembleRunnerBase):
 class LgbmRmsleEnsemble(_EnsembleRunnerBase):
     """LgbmRmsleを使ってアンサンブルする.元の特徴量は使わない."""
 
-    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params):
-        model_params = {
-            "verbose_eval": 100,
-            "num_boost_round": 1000,
-            "early_stopping_rounds": 100,
-            "lgbm_params": {
-                "colsample_bytree": 0.8,
-                "max_depth": 5,
-                "reg_alpha": 0,
-                "reg_lambda": 0,
-                "subsample": 0.8,
-                "min_child_weight": 1.0,
-            },
-        }
+    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params):
         super().__init__(target_col, "rmsle", trainer_flag, "lgbm_rmsle",
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
@@ -47,9 +34,7 @@ class LgbmRmsleEnsemble(_EnsembleRunnerBase):
 class RandomForestRmsleEnsemble(_EnsembleRunnerBase):
     """RfRmsleを使ってアンサンブルする.元の特徴量は使わない."""
 
-    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params):
-        model_params = {"seed": 42}
-
+    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params,  model_params):
         super().__init__(target_col, "rmsle", trainer_flag, "rf_rmsle",
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
@@ -57,8 +42,7 @@ class RandomForestRmsleEnsemble(_EnsembleRunnerBase):
 class LinearRmsleEnsemble(_EnsembleRunnerBase):
     """LinearRmsleを使ってアンサンブルする.元の特徴量は使わず、予測値はlogをとって入力とする."""
 
-    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params):
-        model_params = {}
+    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params):
         super().__init__(target_col, "rmsle", trainer_flag, "linear_rmsle",
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
@@ -77,8 +61,7 @@ class LinearRmsleEnsemble(_EnsembleRunnerBase):
 class AveragingRmsleEnsemble(_EnsembleRunnerBase):
     """AveragingRegressorを使ってアンサンブルする.元の特徴量は使わない"""
 
-    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params):
-        model_params = {}
+    def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params):
         super().__init__(target_col, "rmsle", trainer_flag, "avg_regressor",
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 

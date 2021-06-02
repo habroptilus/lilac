@@ -19,7 +19,6 @@ class FeatureGenerate(luigi.Task):
     features_dir = luigi.Parameter()
     features_conf_key = luigi.Parameter()
     experiment_path = luigi.Parameter()
-    drop_cols = luigi.ListParameter(default=[])
 
     def output(self):
         d = self.create_dir()

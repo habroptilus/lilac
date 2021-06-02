@@ -14,7 +14,7 @@ class EnsembleRunnerFactory:
         self.params = params
         self.required_params = ["target_col",
                                 "folds_generator_flag", "folds_gen_params",
-                                "trainer_flag", "trainer_params"]
+                                "trainer_flag", "trainer_params", "model_params"]
 
     def run(self, flag):
         # regressors
