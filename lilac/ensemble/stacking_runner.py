@@ -49,6 +49,7 @@ class StackingRunner:
             raise Exception(
                 f"1st layers output: {len(output_list)} but no stacking layers follows.")
 
+        result_list = []
         input_list = output_list
         for i, layer in enumerate(self.stackings):
             layer_results = []
@@ -56,16 +57,9 @@ class StackingRunner:
                 runner = self.factory.run(ensemble_flag)
                 result = runner.run(input_list, train, test)
                 layer_results.append(result)
+            result_list.append(layer_results)
             input_list = layer_results
-            self.layer_logging(input_list, i+1, layer)
         if len(input_list) != 1:
             raise Exception("Stacking output should be single.")
-        return input_list[0]
 
-    def layer_logging(self, output_list, layer_num, layer):
-        """layerごとに結果を出力する"""
-        print(f"Layer {layer_num}")
-        for i, output in enumerate(output_list):
-            print(
-                f"[{layer[i]}]: {output['evaluator']} = {output['score']}")
-        print("=============================")
+        return result_list

@@ -27,14 +27,6 @@ def run_tasks(Task, members, n_trials,  base_params, token, app_name, channel, d
         with output_path.open("r") as f:
             cv_output = json.load(f)
         output_list.append(cv_output)
-
-    # 1段目CV表示
-    print("Layer 0")
-    for i, output in enumerate(output_list):
-        print(
-            f"[{', '.join(map(str,members[i].values()))}]: {output['evaluator']} = {output['score']}")
-    print("=============================")
-
     return tasks, output_list
 
 
@@ -57,6 +49,23 @@ def run_stacking(stackings, base_params, tasks, output_list):
     return stacking_runner.run(output_list, train, test)
 
 
+def logging(task_results, stacking_results, members, stackings):
+    print("===== Lilac Execution Result =====")
+    print("")
+    layers_num = len(stacking_results)
+    print(f"[Layer: 0/{layers_num}]")
+    for i, output in enumerate(task_results):
+        print(
+            f"[{', '.join(map(str, members[i].values()))}]:\t{output['evaluator']} = {output['score']}")
+
+    for layer_i, layer in enumerate(stacking_results):
+        print(f"[Layer {layer_i+1}/{layers_num}]")
+        for result_i, result in enumerate(layer):
+            print(
+                f"[{stackings['layers'][layer_i][result_i]}]:\t{result['evaluator']} = {result['score']}")
+    print("")
+
+
 def run_experiment(args):
     with open(args.config_path, "r") as f:
         base_params = yaml.load(f)
@@ -69,11 +78,27 @@ def run_experiment(args):
     token = os.environ["SLACK_TOKEN"]
 
     # tasks実行
-    tasks, output_list = run_tasks(RunCv, members, args.trials,
-                                   base_params, token, args.app_name, args.channel, args.notify, args.plot, args.tune_fs, args.tune_th)
+    tasks, task_results = run_tasks(RunCv, members, args.trials,
+                                    base_params, token, args.app_name, args.channel, args.notify, args.plot, args.tune_fs, args.tune_th)
 
     # stacking実行
-    result = run_stacking(stackings, base_params, tasks, output_list)
+    stacking_results = run_stacking(
+        stackings, base_params, tasks, task_results)
+
+    # logging
+    logging(task_results, stacking_results, members, stackings)
+
+    result = {
+        "details": task_results + stacking_results,
+        "settings": {
+            "members": members,
+            "stackings": stackings,
+            "trials": args.trials,
+            "tune_fs": args.tune_fs,
+            "tune_th": args.tune_th
+        }
+    }
+    result["output"] = result["details"][-1][0]
 
     output_path = f"{args.output_dir}/{args.key}_{args.trials}_{args.tune_fs}_{args.tune_th}.json"
 
@@ -83,6 +108,7 @@ def run_experiment(args):
         print(
             f"Tuned hyperparameters with optuna. (trials : {args.trials})")
 
-    print(f"CV score ({result['evaluator']}) : {result['score']}")
+    print(
+        f"CV score ({result['output']['evaluator']}) : {result['output']['score']}")
     print(f"Output path: {output_path}")
     return result, output_path
