@@ -18,6 +18,10 @@ class FeatureSelector:
             selected_cols = list(importance.sort_values(by="importance", ascending=False).head(
                 int(len(importance)*self.threshold)).index)
 
+        if not set(selected_cols).issubset(set(test.columns)):
+            raise Exception(
+                f"Please add following columns to drop_cols: {set(selected_cols)-set(test.columns)}")
+
         train = train[selected_cols+[self.target_col]]
         test = test[selected_cols]
         return train, test

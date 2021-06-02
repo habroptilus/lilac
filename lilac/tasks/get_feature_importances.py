@@ -23,7 +23,8 @@ class GetFeatureImportances(luigi.Task):
     bagging_num = luigi.IntParameter()
     base_class = luigi.IntParameter()
     allow_less_than_base = luigi.BoolParameter()
-    class_weight = luigi.Parameter(default=None)
+    class_weight = luigi.Parameter()
+    drop_cols = luigi.ListParameter(default=[])
 
     # Feature Selection特有
     importance_flag = luigi.Parameter()
@@ -31,12 +32,12 @@ class GetFeatureImportances(luigi.Task):
     fold_num = luigi.IntParameter()
     null_importance_trials = luigi.IntParameter()
 
-    fs_colsample_bytree = luigi.FloatParameter(default=0.8)
-    fs_max_depth = luigi.IntParameter(default=5)
-    fs_reg_alpha = luigi.FloatParameter(default=0)
-    fs_reg_lambda = luigi.FloatParameter(default=0)
-    fs_subsample = luigi.FloatParameter(default=0.8)
-    fs_min_child_weight = luigi.FloatParameter(default=0.1)
+    fs_colsample_bytree = luigi.FloatParameter()
+    fs_max_depth = luigi.IntParameter()
+    fs_reg_alpha = luigi.FloatParameter()
+    fs_reg_lambda = luigi.FloatParameter()
+    fs_subsample = luigi.FloatParameter()
+    fs_min_child_weight = luigi.FloatParameter()
 
     def output(self):
         d = self.create_dir()

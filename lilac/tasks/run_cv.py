@@ -22,17 +22,17 @@ class RunCv(luigi.Task):
 
     threshold = luigi.FloatParameter(default=None)
     model_flag = luigi.Parameter()
-    colsample_bytree = luigi.FloatParameter(default=0.8)
-    max_depth = luigi.IntParameter(default=5)
-    reg_alpha = luigi.FloatParameter(default=0)
-    reg_lambda = luigi.FloatParameter(default=0)
-    subsample = luigi.FloatParameter(default=0.8)
-    min_child_weight = luigi.FloatParameter(default=1.0)
-    lr = luigi.FloatParameter(default=0.1)
-    random_strength = luigi.IntParameter(default=1)
-    bagging_temperature = luigi.FloatParameter(default=0.1)
-    od_type = luigi.Parameter(default="IncToDec")
-    od_wait = luigi.IntParameter(default=10)
+    colsample_bytree = luigi.FloatParameter()
+    max_depth = luigi.IntParameter()
+    reg_alpha = luigi.FloatParameter()
+    reg_lambda = luigi.FloatParameter()
+    subsample = luigi.FloatParameter()
+    min_child_weight = luigi.FloatParameter()
+    lr = luigi.FloatParameter()
+    random_strength = luigi.IntParameter()
+    bagging_temperature = luigi.FloatParameter()
+    od_type = luigi.Parameter()
+    od_wait = luigi.IntParameter()
 
     def requires(self):
         return [self.clone(FeatureGenerate), self.clone(GetFeatureImportances)]
@@ -51,6 +51,7 @@ class RunCv(luigi.Task):
             "verbose_eval": self.verbose_eval,
             "early_stopping_rounds": self.early_stopping_rounds,
             "class_weight": self.class_weight,
+            "seed": self.seed,
             "lgbm_params": {
                 "colsample_bytree": self.colsample_bytree,
                 "max_depth": self.max_depth,

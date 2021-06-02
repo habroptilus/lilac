@@ -22,6 +22,24 @@ class StackingRunner:
                 "base_class": base_params["base_class"],
                 "seed": base_params["seed"],
                 "allow_less_than_base": base_params["allow_less_than_base"]
+            },
+            "model_params": {
+                "target_col": base_params["target_col"],
+                "verbose_eval": base_params["verbose_eval"],
+                "early_stopping_rounds": base_params["early_stopping_rounds"],
+                "class_weight": base_params["class_weight"],
+                "seed": base_params["seed"],
+                "lgbm_params": {
+                    "colsample_bytree": base_params["colsample_bytree"],
+                    "max_depth": base_params["max_depth"],
+                    "reg_alpha": base_params["reg_alpha"],
+                    "reg_lambda": base_params["reg_lambda"],
+                    "subsample": base_params["subsample"],
+                    "min_child_weight": base_params["min_child_weight"],
+                    "num_leaves": int(2 ** (base_params["max_depth"]) * 0.7),
+                    "n_estimators": base_params["n_estimators"],
+                    "random_state": base_params["seed"]
+                }
             }
         }
         self.factory = EnsembleRunnerFactory(params)

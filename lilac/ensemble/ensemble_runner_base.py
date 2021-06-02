@@ -13,7 +13,6 @@ class _EnsembleRunnerBase:
         self.target_col = target_col
         self.cv = CrossValidationRunner(pred_oof=True)
         self.evaluator = EvaluatorFactory(target_col).run(evaluator_flag)
-        model_params["target_col"] = target_col
         self.model_factory = ModelFactory(model_flag, model_params)
         self.trainer = TrainerFactory(trainer_flag, trainer_params).run()
         self.folds_generator = FoldsGeneratorFactory().run(
