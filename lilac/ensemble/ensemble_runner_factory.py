@@ -1,10 +1,12 @@
-from lilac.ensemble.ensemble_runners import (LgbmMultiEnsemble,
-                                             LgbmRmsleEnsemble,
-                                             LinearRmsleEnsemble,
-                                             LrMultiEnsemble,
-                                             RandomForestRmsleEnsemble,
-                                             RidgeRmsleEnsemble,
-                                             AveragingMultiEnsemble)
+from lilac.ensemble.ensemble_runners.classifiers.multi import (
+    AveragingMultiEnsemble, LgbmMultiEnsemble, LrMultiEnsemble)
+from lilac.ensemble.ensemble_runners.regressors.rmse import (
+    AveragingRmseEnsemble, LgbmRmseEnsemble, LinearRmseEnsemble,
+    RandomForestRmseEnsemble, RidgeRmseEnsemble)
+from lilac.ensemble.ensemble_runners.regressors.rmsle import (
+    AveragingRmsleEnsemble,
+    LgbmRmsleEnsemble, LinearRmsleEnsemble, RandomForestRmsleEnsemble,
+    RidgeRmsleEnsemble)
 
 
 class EnsembleRunnerFactory:
@@ -15,6 +17,8 @@ class EnsembleRunnerFactory:
                                 "trainer_flag", "trainer_params"]
 
     def run(self, flag):
+        # regressors
+        # rmsle
         if flag == "lgbm_rmsle":
             Model = LgbmRmsleEnsemble
         elif flag == "linear_rmsle":
@@ -23,6 +27,21 @@ class EnsembleRunnerFactory:
             Model = RandomForestRmsleEnsemble
         elif flag == "ridge_rmsle":
             Model = RidgeRmsleEnsemble
+        elif flag == "avg_rmsle":
+            Model = AveragingRmsleEnsemble
+        # rmse
+        elif flag == "lgbm_rmse":
+            Model = LgbmRmseEnsemble
+        elif flag == "linear_rmse":
+            Model = LinearRmseEnsemble
+        elif flag == "rf_rmse":
+            Model = RandomForestRmseEnsemble
+        elif flag == "ridge_rmse":
+            Model = RidgeRmseEnsemble
+        elif flag == "avg_rmse":
+            Model = AveragingRmseEnsemble
+        # classfiers
+        # multi
         elif flag == "lgbm_multi":
             Model = LgbmMultiEnsemble
         elif flag == "lr_multi":

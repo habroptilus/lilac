@@ -3,6 +3,7 @@ from .regressors.linear_regressors import LinearRmsle, LinearModel, LinearPositi
 from .regressors.catb_regressors import CatbRmseRegressor, CatbRmsleRegressor
 from .regressors.xgb_regressors import XgbRmseRegressor, XgbRmsleRegressor
 from .regressors.random_forest_regressors import RandomForestRmseRegressor, RandomForestMaeRegressor, RandomForestRmsleRegressor
+from .regressors.averaging_regressors import AveragingRegressor
 from .classifiers.lgbm_classifiers import LgbmBinaryClassifier, LgbmMultiClassifier
 from .classifiers.logistic_regression import LrMultiClassifier
 from .classifiers.catb_classifiers import CatbBinaryClassifier, CatbMultiClassifier
@@ -90,6 +91,8 @@ class ModelFactory:
         elif model_str == "avg_multi":
             self.Model = AveragingMultiClassifier
             self.required_params.append("group_prefix")
+        elif model_str == "avg_regressor":
+            self.Model = AveragingRegressor
         else:
             raise Exception(f"Invalid model flag {model_str}")
 
