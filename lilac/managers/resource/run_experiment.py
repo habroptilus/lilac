@@ -8,6 +8,7 @@ from lilac.tasks.run_cv import RunCv
 from lilac.ensemble.stacking_runner import StackingRunner
 from lilac.tuner.tasks_runner import TasksRunnerWithOptuna
 from lilac.evaluators.evaluator_factory import EvaluatorFactory
+from lilac.utils.utils import MyEncoder
 import os
 
 
@@ -110,4 +111,6 @@ def run_experiment(settings_path, key, trials, app_name, channel, notify, plot, 
     print(
         f"CV score ({result['output']['evaluator']}) : {result['output']['score']}")
     print(f"Output path: {output_path}")
-    return result, output_path
+
+    with open(output_path, "w") as f:
+        json.dump(result, f, cls=MyEncoder)

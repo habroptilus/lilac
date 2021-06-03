@@ -1,28 +1,22 @@
 """CLIエンドポイント"""
-import argparse
-import json
-from .resource.initialize import initialize
-from .resource.run_experiment import run_experiment
-
-from lilac.utils.utils import MyEncoder
 
 
 def command_new(args):
+    from .resource.initialize import initialize
     initialize(args.settings_path,
                args.features_dir, args.output_dir, args.result_dir,
                args.data_dir, args.submission_dir)
 
 
 def command_run(args):
+    from .resource.run_experiment import run_experiment
     result, output_path = run_experiment(args.settings_path, args.key, args.trials, args.app_name,
                                          args.channel, args.notify, args.plot,
                                          args.tune_fs, args.tune_th, args.output_dir)
 
-    with open(output_path, "w") as f:
-        json.dump(result, f, cls=MyEncoder)
-
 
 def main():
+    import argparse
     parser = argparse.ArgumentParser(description='Lilac argument parser')
     subparsers = parser.add_subparsers()
 
