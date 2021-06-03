@@ -1,5 +1,4 @@
 import json
-import yaml
 from pathlib import Path
 
 import pandas as pd
@@ -67,11 +66,10 @@ def logging(task_results, stacking_results, members, stackings):
 
 
 def run_experiment(args):
-    with open(args.config_path, "r") as f:
-        base_params = yaml.load(f)
-
-    with open(base_params["experiment_path"], "r") as f:
+    with open(args.settings_path, "r") as f:
         config = json.load(f)
+    base_params = config.pop("config")
+    base_params["settings_path"] = args.settings_path
 
     members = config["run"][args.key]["members"]
     stackings = config["stacking"][config["run"][args.key]["stacking_key"]]

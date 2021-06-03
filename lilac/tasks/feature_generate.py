@@ -18,7 +18,7 @@ class FeatureGenerate(luigi.Task):
     luigi_dir = luigi.Parameter()
     features_dir = luigi.Parameter()
     features_conf_key = luigi.Parameter()
-    experiment_path = luigi.Parameter()
+    settings_path = luigi.Parameter()
 
     def output(self):
         d = self.create_dir()
@@ -29,7 +29,7 @@ class FeatureGenerate(luigi.Task):
         return Path(f"{self.result_dir}/{self.luigi_dir}/{self.features_conf_key}")
 
     def run(self):
-        with Path(self.experiment_path).open() as f:
+        with Path(self.settings_path).open() as f:
             features_conf = json.load(f)["features"]
 
         df_train = pd.read_csv(f"{self.result_dir}/{self.luigi_dir}/train.csv")
