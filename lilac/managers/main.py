@@ -10,9 +10,9 @@ def command_new(args):
 
 def command_run(args):
     from .resource.run_experiment import run_experiment
-    result, output_path = run_experiment(args.settings_path, args.key, args.trials, args.app_name,
-                                         args.channel, args.notify, args.plot,
-                                         args.tune_fs, args.tune_th, args.output_dir)
+    run_experiment(args.settings_path, args.key, args.trials, args.app_name,
+                   args.channel, args.notify, args.plot,
+                   args.tune_fs, args.tune_th, args.output_dir)
 
 
 def main():

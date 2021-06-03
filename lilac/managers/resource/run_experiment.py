@@ -89,7 +89,7 @@ def run_experiment(settings_path, key, trials, app_name, channel, notify, plot, 
     logging(task_results, stacking_results, members, stackings)
 
     result = {
-        "details": task_results + stacking_results,
+        "details": [task_results] + stacking_results,
         "settings": {
             "members": members,
             "stackings": stackings,

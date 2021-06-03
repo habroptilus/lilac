@@ -93,7 +93,6 @@ class GetFeatureImportances(luigi.Task):
         return self.imp_getter.return_flag()
 
     def run(self):
-        print(list(self.drop_cols))
         train = pd.read_csv(self.input()[0].path)
 
         importances = self.imp_getter.run(train)
