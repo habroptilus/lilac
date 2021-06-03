@@ -24,7 +24,7 @@ class GetFeatureImportances(luigi.Task):
     base_class = luigi.IntParameter()
     allow_less_than_base = luigi.BoolParameter()
     class_weight = luigi.Parameter()
-    drop_cols = luigi.ListParameter(default=[])
+    drop_cols = luigi.ListParameter()
 
     # Feature Selection特有
     importance_flag = luigi.Parameter()
@@ -93,6 +93,7 @@ class GetFeatureImportances(luigi.Task):
         return self.imp_getter.return_flag()
 
     def run(self):
+        print(list(self.drop_cols))
         train = pd.read_csv(self.input()[0].path)
 
         importances = self.imp_getter.run(train)

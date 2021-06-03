@@ -10,6 +10,5 @@ def get_init_parser():
     parser.add_argument('--features-dir', default="result/features")
     parser.add_argument('--data-dir', default="data")
     parser.add_argument('--submission-dir', default="submissions")
-    parser.add_argument('--config-path', default='config.yaml')
-    parser.add_argument('--experiment-path', default='experiment.json')
+    parser.add_argument('--settings-path', default='settings.json')
     return parser
