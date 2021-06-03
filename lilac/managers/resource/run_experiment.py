@@ -1,3 +1,4 @@
+"""lilac runコマンドの実体."""
 import json
 from pathlib import Path
 
@@ -65,19 +66,19 @@ def logging(task_results, stacking_results, members, stackings):
     print("")
 
 
-def run_experiment(args):
-    with open(args.settings_path, "r") as f:
+def run_experiment(settings_path, key, trials, app_name, channel, notify, plot, tune_fs, tune_th, output_dir):
+    with open(settings_path, "r") as f:
         config = json.load(f)
     base_params = config.pop("config")
-    base_params["settings_path"] = args.settings_path
+    base_params["settings_path"] = settings_path
 
-    members = config["run"][args.key]["members"]
-    stackings = config["stacking"][config["run"][args.key]["stacking_key"]]
+    members = config["run"][key]["members"]
+    stackings = config["stacking"][config["run"][key]["stacking_key"]]
     token = os.environ["SLACK_TOKEN"]
 
     # tasks実行
-    tasks, task_results = run_tasks(RunCv, members, args.trials,
-                                    base_params, token, args.app_name, args.channel, args.notify, args.plot, args.tune_fs, args.tune_th)
+    tasks, task_results = run_tasks(RunCv, members, trials,
+                                    base_params, token, app_name, channel, notify, plot, tune_fs, tune_th)
 
     # stacking実行
     stacking_results = run_stacking(
@@ -91,20 +92,20 @@ def run_experiment(args):
         "settings": {
             "members": members,
             "stackings": stackings,
-            "trials": args.trials,
-            "tune_fs": args.tune_fs,
-            "tune_th": args.tune_th
+            "trials": trials,
+            "tune_fs": tune_fs,
+            "tune_th": tune_th
         }
     }
     result["output"] = result["details"][-1][0]
 
-    output_path = f"{args.output_dir}/{args.key}_{args.trials}_{args.tune_fs}_{args.tune_th}.json"
+    output_path = f"{output_dir}/{key}_{trials}_{tune_fs}_{tune_th}.json"
 
-    if not args.trials:
+    if not trials:
         print("Used default hyperparameters.")
     else:
         print(
-            f"Tuned hyperparameters with optuna. (trials : {args.trials})")
+            f"Tuned hyperparameters with optuna. (trials : {trials})")
 
     print(
         f"CV score ({result['output']['evaluator']}) : {result['output']['score']}")

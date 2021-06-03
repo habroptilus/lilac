@@ -10,7 +10,7 @@
 
 ## SetUp
 
-1. `lilac-init`コマンドで初期設定をする.
+1. `lilac new`コマンドで初期設定をする.
 2. ダウンロードしたデータを1で作成した`data`(または`result/luigi`)におく.
 
 ## Run
@@ -49,7 +49,7 @@
 
 ### 実行
 
-`lilac-run キー (オプション)`
+`lilac run キー (オプション)`
 
 キーは`experiment.json`の`run`のキーを指定する.
 
@@ -62,9 +62,8 @@
 
 * ensemble : アンサンブル、スタッキング関連
 * evaluators : 評価指標を計算する
-* experiment : 実験を実行する
 * features : 特徴量生成
-* managers : セットアップなど
+* managers : コマンド関連
 * models : 予測モデル
 * preprocessors : 特徴量生成に用いるクラス、関数など
 * selectors : 特徴量選択を行う.
