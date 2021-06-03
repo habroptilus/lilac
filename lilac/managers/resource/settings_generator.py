@@ -1,3 +1,4 @@
+"""settings templateを作成するclass."""
 import json
 
 

@@ -1,8 +1,7 @@
-
+"""lilac newコマンドの実体."""
 from pathlib import Path
 
-from lilac.managers.arg_parse import get_init_parser
-from lilac.managers.settings_generator import Settings
+from .settings_generator import Settings
 
 
 def initialize(settings_path, features_dir, output_dir, result_dir,
@@ -28,16 +27,3 @@ data
 result
 submissions
         """)
-
-
-def main():
-    parser = get_init_parser()
-    args = parser.parse_args()
-
-    initialize(args.settings_path,
-               args.features_dir, args.output_dir, args.result_dir,
-               args.data_dir, args.submission_dir)
-
-
-if __name__ == "__main__":
-    main()
