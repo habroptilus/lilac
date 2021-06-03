@@ -30,11 +30,12 @@
 
 
 ### 設定ファイルの編集
-`config.yaml`と
-`experiment.json`の中身を編集する.
+`
+`settings.json`の中身を編集する.
 
-`experiment.json`の各項目について簡単な説明:
+`settings.json`の各項目について簡単な説明:
 
+* config : デフォルトパラメータ. runやstackingのparamsで上書きできる.
 * run : featuresとmodelの組み合わせの配列、およびstackingの方法を指定する
 * features : 特徴量の集合を登録する.
 * stacking : スタッキングの設定を登録する.
