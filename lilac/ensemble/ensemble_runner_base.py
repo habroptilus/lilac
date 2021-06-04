@@ -21,14 +21,44 @@ class EnsembleRunnerBase:
 
     def run(self, output_list, train, test):
         train_df, test_df = self._create_datasets(output_list, train, test)
+        copied = train_df.copy()
         # oof_predが欠損しているデータはensembleモデルの学習に用いない
-        # if sum(train_df.isnull()):
-        #    print(
-        #        "[Warning] Predictions have None records, so we drop them before ensemble.")
-        #    train_df = train_df.dropna()
+        print(train_df.isnull())
+        if train_df.isnull().any(axis=1).sum():
+            print(
+                "[Warning] Predictions have None records, so we drop them before ensemble.")
+            dropped = copied.dropna()
+            copied = dropped.reset_index(drop=True)
+            train = train.loc[dropped.index]
+
         folds = self.folds_generator.run(train)
-        result = self.cv.run(train_df, folds, self.model_factory,
+        result = self.cv.run(copied, folds, self.model_factory,
                              self.trainer, self.evaluator)
+
+        # oof_predの生成
+        oof_pred_df = pd.DataFrame()
+        oof_pred_df["oof_pred"] = [None for _ in range(len(train_df))]
+        print(len(dropped.index), len(result["oof_pred"]))
+        oof_pred_df.loc[dropped.index, "oof_pred"] = np.array(
+            result["oof_pred"])
+        result["oof_pred"] = oof_pred_df["oof_pred"].to_list()
+
+        # oof_raw_predの生成
+        oof_raw_pred_df = pd.DataFrame()
+        oof_raw_pred = np.array(result["oof_raw_pred"])
+        if len(oof_raw_pred.shape) == 2:
+            cols = [f"oof_pred{i}" for i in oof_raw_pred.shape[1]]
+            oof_raw_pred_df[cols] = np.full(
+                (len(train_df), oof_raw_pred.shape[1]), None)
+            oof_raw_pred_df.loc[dropped.index, cols] = oof_raw_pred
+            result["oof_raw_pred"] = oof_raw_pred_df[cols].values.tolist()
+        elif len(oof_raw_pred.shape) == 1:
+            oof_raw_pred_df["oof_pred"] = [None for _ in range(len(train_df))]
+            oof_raw_pred_df.loc[dropped.index, "oof_pred"] = oof_raw_pred
+            result["oof_raw_pred"] = oof_raw_pred_df["oof_pred"].to_list()
+        else:
+            raise Exception("Error")
+
         result["pred"] = list(self.cv.final_output(test_df))
         result["raw_pred"] = list(self.cv.raw_output(test_df))
         return result
