@@ -12,7 +12,7 @@ class EvaluatorBase:
         df = df.copy()
         df["pred"] = pred
         df["raw_pred"] = raw_pred
-        if len(df["pred"].isnull()) or len(df["raw_pred"].isnull()):
+        if sum(df["pred"].isnull()) or sum(df["raw_pred"].isnull()):
             print("[Waring] prediction have nan. So drop and evaluate.")
             df = df.dropna()
         return self._run(df[[self.target_col, "pred", "raw_pred"]])

@@ -14,7 +14,10 @@ class StackingRunner:
             "folds_gen_params": {"fold_num":  base_params["fold_num"],
                                  "seed":  base_params["seed"],
                                  "key_col":  base_params["group_kfolds_col"],
-                                 "target_col": base_params["target_col"]},
+                                 "target_col": base_params["target_col"],
+                                 "ts_column": base_params["ts_column"],
+                                 "clipping": base_params["clipping"]
+                                 },
             "trainer_flag":  base_params["trainer_flag"],
             "trainer_params": {
                 "target_col": base_params["target_col"],
