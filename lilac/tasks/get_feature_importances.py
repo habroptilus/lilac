@@ -19,12 +19,14 @@ class GetFeatureImportances(luigi.Task):
     verbose_eval = luigi.IntParameter()
     n_estimators = luigi.IntParameter()
     early_stopping_rounds = luigi.IntParameter()
-    trainer_flag = luigi.Parameter()  # selfは指定不可
+    trainer_flag = luigi.Parameter()
     bagging_num = luigi.IntParameter()
     base_class = luigi.IntParameter()
     allow_less_than_base = luigi.BoolParameter()
     class_weight = luigi.Parameter()
     drop_cols = luigi.ListParameter()
+    ts_column = luigi.Parameter()
+    clipping = luigi.BoolParameter()
 
     # Feature Selection特有
     importance_flag = luigi.Parameter()
@@ -85,7 +87,9 @@ class GetFeatureImportances(luigi.Task):
                 "fold_num": self.fold_num,
                 "seed": self.seed,
                 "target_col": self.target_col,
-                "key_col": self.group_kfolds_col
+                "key_col": self.group_kfolds_col,
+                "ts_column": self.ts_column,
+                "clipping": self.clipping
             }
         }
         self.imp_getter = ImportanceGetterFactory(

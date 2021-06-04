@@ -4,9 +4,9 @@ from lilac.ensemble.ensemble_runners.regressors.rmse import (
     AveragingRmseEnsemble, LgbmRmseEnsemble, LinearRmseEnsemble,
     RandomForestRmseEnsemble, RidgeRmseEnsemble)
 from lilac.ensemble.ensemble_runners.regressors.rmsle import (
-    AveragingRmsleEnsemble,
     LgbmRmsleEnsemble, LinearRmsleEnsemble, RandomForestRmsleEnsemble,
     RidgeRmsleEnsemble)
+from lilac.ensemble.ensemble_runners.regressors.mae import LgbmMaeEnsemble
 
 
 class EnsembleRunnerFactory:
@@ -27,8 +27,6 @@ class EnsembleRunnerFactory:
             Model = RandomForestRmsleEnsemble
         elif flag == "ridge_rmsle":
             Model = RidgeRmsleEnsemble
-        elif flag == "avg_rmsle":
-            Model = AveragingRmsleEnsemble
         # rmse
         elif flag == "lgbm_rmse":
             Model = LgbmRmseEnsemble
@@ -40,6 +38,9 @@ class EnsembleRunnerFactory:
             Model = RidgeRmseEnsemble
         elif flag == "avg_rmse":
             Model = AveragingRmseEnsemble
+        # mae
+        elif flag == "lgbm_mae":
+            Model = LgbmMaeEnsemble
         # classfiers
         # multi
         elif flag == "lgbm_multi":

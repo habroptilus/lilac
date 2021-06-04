@@ -44,7 +44,9 @@ class Settings:
             "fs_reg_alpha": 0,
             "fs_reg_lambda": 0,
             "fs_subsample": 0.8,
-            "fs_min_child_weight": 1.0
+            "fs_min_child_weight": 1.0,
+            "ts_column": "datetime",
+            "clipping": False
         },
         "run": {
             "sample": {

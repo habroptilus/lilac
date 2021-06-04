@@ -17,6 +17,8 @@ class CrossValidationRunner:
         self.models = []
         if self.pred_oof:
             pred_valid_df = labeled.copy()
+            pred_valid_df["oof_pred"] = None
+            pred_valid_df["oof_raw_pred"] = None
 
         for i, (tdx, vdx) in enumerate(folds):
             print(f'Fold : {i+1}')

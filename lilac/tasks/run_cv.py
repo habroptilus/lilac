@@ -91,7 +91,8 @@ class RunCv(luigi.Task):
             "allow_less_than_base": self.allow_less_than_base
         }
         folds_gen_params = {"fold_num": self.fold_num, "seed": self.seed,
-                            "target_col": self.target_col, "key_col": self.group_kfolds_col}
+                            "target_col": self.target_col, "key_col": self.group_kfolds_col,
+                            "ts_column": self.ts_column, "clipping": self.clipping}
 
         self.model_factory = ModelFactory(self.model_flag, model_params)
         self.trainer_factory = TrainerFactory(

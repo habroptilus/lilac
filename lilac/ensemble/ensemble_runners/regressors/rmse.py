@@ -1,7 +1,7 @@
-from lilac.ensemble.ensemble_runner_base import _EnsembleRunnerBase
+from lilac.ensemble.ensemble_runner_base import SingleEnsembleRunnerBase
 
 
-class RidgeRmseEnsemble(_EnsembleRunnerBase):
+class RidgeRmseEnsemble(SingleEnsembleRunnerBase):
     """RidgeRmseを使ってアンサンブルする.元の特徴量は使わない。"""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params):
@@ -9,7 +9,7 @@ class RidgeRmseEnsemble(_EnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
 
-class LgbmRmseEnsemble(_EnsembleRunnerBase):
+class LgbmRmseEnsemble(SingleEnsembleRunnerBase):
     """LgbmRmseを使ってアンサンブルする.元の特徴量は使わない."""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params):
@@ -17,7 +17,7 @@ class LgbmRmseEnsemble(_EnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
 
-class RandomForestRmseEnsemble(_EnsembleRunnerBase):
+class RandomForestRmseEnsemble(SingleEnsembleRunnerBase):
     """RfRmseを使ってアンサンブルする.元の特徴量は使わない."""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params):
@@ -26,7 +26,7 @@ class RandomForestRmseEnsemble(_EnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
 
-class LinearRmseEnsemble(_EnsembleRunnerBase):
+class LinearRmseEnsemble(SingleEnsembleRunnerBase):
     """LinearRmseを使ってアンサンブルする.元の特徴量は使わない"""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params):
@@ -34,7 +34,7 @@ class LinearRmseEnsemble(_EnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params)
 
 
-class AveragingRmseEnsemble(_EnsembleRunnerBase):
+class AveragingRmseEnsemble(SingleEnsembleRunnerBase):
     """AveragingRegressorを使ってアンサンブルする.元の特徴量は使わない"""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params):
