@@ -56,7 +56,6 @@ class _EnsembleRunnerBase:
         return self.get_result(folds, train_df, test_df)
 
     def get_result(self, folds, train_df, test_df):
-        print(train_df.columns)
         # dropされているかもしれないtrain_df
         dropped_index = train_df.index
 
