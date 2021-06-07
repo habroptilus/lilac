@@ -11,7 +11,7 @@ from lilac.utils.utils import MyEncoder
 
 def run_tasks(Task, members, n_trials,  base_params, token, app_name, channel, do_notify, do_plot, tune_fs, tune_th):
     # 使用するevaluatorからdirectionを作成
-    direction = EvaluatorFactory(base_params["target_col"]).run(
+    direction = EvaluatorFactory().run(
         base_params["evaluator_flag"]).get_direction()
     # 1段目実行
     task_runner = TasksRunnerWithOptuna(

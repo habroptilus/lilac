@@ -116,10 +116,10 @@ class RunCv(luigi.Task):
         # feature selectと同じコード
         folds = self.folds_generator.run(before_dropped)
 
-        evaluator_factory = EvaluatorFactory(self.target_col)
+        evaluator_factory = EvaluatorFactory()
         evaluator = evaluator_factory.run(self.evaluator_flag)
         trainer = self.trainer_factory.run()
-        cv = CrossValidationRunner(pred_oof=True)
+        cv = CrossValidationRunner(pred_oof=True, target_col=self.target_col)
         output = cv.run(train, folds, self.model_factory, trainer, evaluator)
         output["raw_pred"] = list(cv.raw_output(test))
         output["pred"] = list(cv.final_output(test))

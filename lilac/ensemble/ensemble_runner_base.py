@@ -13,8 +13,8 @@ class EnsembleRunnerBase:
     def __init__(self, target_col, evaluator_flag, trainer_flag, model_flag, folds_generator_flag,
                  trainer_params, model_params, folds_gen_params, use_original_features, drop_cols):
         self.target_col = target_col
-        self.cv = CrossValidationRunner(pred_oof=True)
-        self.evaluator = EvaluatorFactory(target_col).run(evaluator_flag)
+        self.cv = CrossValidationRunner(pred_oof=True, target_col=target_col)
+        self.evaluator = EvaluatorFactory().run(evaluator_flag)
         self.model_factory = ModelFactory(model_flag, model_params)
         self.trainer = TrainerFactory(trainer_flag, trainer_params).run()
         self.folds_generator = FoldsGeneratorFactory().run(
@@ -72,7 +72,7 @@ class EnsembleRunnerBase:
         oof_raw_pred_df = pd.DataFrame()
         oof_raw_pred = np.array(result["oof_raw_pred"])
         if len(oof_raw_pred.shape) == 2:
-            cols = [f"oof_pred{i}" for i in oof_raw_pred.shape[1]]
+            cols = [f"oof_pred{i}" for i in range(oof_raw_pred.shape[1])]
             oof_raw_pred_df[cols] = np.full(
                 (len(train_df), oof_raw_pred.shape[1]), None)
             oof_raw_pred_df.loc[dropped_index, cols] = oof_raw_pred

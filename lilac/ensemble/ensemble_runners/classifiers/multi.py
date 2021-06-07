@@ -15,7 +15,7 @@ class AveragingMultiEnsemble(MultiEnsembleRunnerBase):
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params, use_original_features, drop_cols):
         model_params["group_prefix"] = "pred"
         super().__init__(target_col, "f1_macro", trainer_flag, "avg_multi",
-                         folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features)
+                         folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features, drop_cols)
 
 
 class LgbmMultiEnsemble(MultiEnsembleRunnerBase):
@@ -26,4 +26,4 @@ class LgbmMultiEnsemble(MultiEnsembleRunnerBase):
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params, use_original_features, drop_cols):
         super().__init__(target_col, "f1_macro", trainer_flag, "lgbm_multi",
-                         folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features)
+                         folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features, drop_cols)
