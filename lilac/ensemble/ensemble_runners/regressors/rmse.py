@@ -1,7 +1,7 @@
-from lilac.ensemble.ensemble_runner_base import SingleEnsembleRunnerBase
+from lilac.ensemble.ensemble_runner_base import EnsembleRunnerBase
 
 
-class RidgeRmseEnsemble(SingleEnsembleRunnerBase):
+class RidgeRmseEnsemble(EnsembleRunnerBase):
     """RidgeRmseを使ってアンサンブルする.元の特徴量は使わない。"""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params, use_original_features, drop_cols):
@@ -9,7 +9,7 @@ class RidgeRmseEnsemble(SingleEnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features, drop_cols)
 
 
-class LgbmRmseEnsemble(SingleEnsembleRunnerBase):
+class LgbmRmseEnsemble(EnsembleRunnerBase):
     """LgbmRmseを使ってアンサンブルする.元の特徴量は使わない."""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params, use_original_features, drop_cols):
@@ -17,7 +17,7 @@ class LgbmRmseEnsemble(SingleEnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features, drop_cols)
 
 
-class RandomForestRmseEnsemble(SingleEnsembleRunnerBase):
+class RandomForestRmseEnsemble(EnsembleRunnerBase):
     """RfRmseを使ってアンサンブルする.元の特徴量は使わない."""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params, use_original_features, drop_cols):
@@ -26,7 +26,7 @@ class RandomForestRmseEnsemble(SingleEnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features, drop_cols)
 
 
-class LinearRmseEnsemble(SingleEnsembleRunnerBase):
+class LinearRmseEnsemble(EnsembleRunnerBase):
     """LinearRmseを使ってアンサンブルする.元の特徴量は使わない"""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params, use_original_features, drop_cols):
@@ -34,7 +34,7 @@ class LinearRmseEnsemble(SingleEnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features, drop_cols)
 
 
-class AveragingRmseEnsemble(SingleEnsembleRunnerBase):
+class AveragingRmseEnsemble(EnsembleRunnerBase):
     """AveragingRegressorを使ってアンサンブルする.元の特徴量は使わない"""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params, use_original_features, drop_cols):

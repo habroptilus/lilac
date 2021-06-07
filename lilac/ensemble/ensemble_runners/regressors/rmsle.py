@@ -1,4 +1,4 @@
-from lilac.ensemble.ensemble_runner_base import SingleEnsembleRunnerBase, LogSingleEnsembleRunnerBase
+from lilac.ensemble.ensemble_runner_base import EnsembleRunnerBase, LogSingleEnsembleRunnerBase
 
 
 class RidgeRmsleEnsemble(LogSingleEnsembleRunnerBase):
@@ -10,7 +10,7 @@ class RidgeRmsleEnsemble(LogSingleEnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features, drop_cols)
 
 
-class LgbmRmsleEnsemble(SingleEnsembleRunnerBase):
+class LgbmRmsleEnsemble(EnsembleRunnerBase):
     """LgbmRmsleを使ってアンサンブルする.元の特徴量は使わない."""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params, use_original_features, drop_cols):
@@ -18,7 +18,7 @@ class LgbmRmsleEnsemble(SingleEnsembleRunnerBase):
                          folds_generator_flag, trainer_params, model_params, folds_gen_params, use_original_features, drop_cols)
 
 
-class RandomForestRmsleEnsemble(SingleEnsembleRunnerBase):
+class RandomForestRmsleEnsemble(EnsembleRunnerBase):
     """RfRmsleを使ってアンサンブルする.元の特徴量は使わない."""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params,  model_params, use_original_features, drop_cols):

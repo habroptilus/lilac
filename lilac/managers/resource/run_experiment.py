@@ -36,6 +36,8 @@ def run_stacking(stackings, base_params, tasks, output_list, use_original_featur
         # stacking全体のパラメータを書き換える
         print(f"Update params with : {ensemble_params}")
         base_params.update(ensemble_params)
+        use_original_features = ensemble_params.get(
+            "use_original_features", use_original_features)
 
     # stacking
     stacking_runner = StackingRunner(

@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 
-class EnsembleRunnerBase:
+class _EnsembleRunnerBase:
     """アンサンブルを行う基底クラス.継承して実装する."""
 
     def __init__(self, target_col, evaluator_flag, trainer_flag, model_flag, folds_generator_flag,
@@ -30,7 +30,9 @@ class EnsembleRunnerBase:
         if self.use_original_features:
             # 元の特徴量を使う場合
             train_dropped = train.drop(self.drop_cols, axis=1)
+
             train_cols = list(train_dropped.columns)
+            print(train_cols)
             train_cols.remove(self.target_col)
             test_dropped = test[train_cols]
             # 元のデータセットと結合する
@@ -54,6 +56,7 @@ class EnsembleRunnerBase:
         return self.get_result(folds, train_df, test_df)
 
     def get_result(self, folds, train_df, test_df):
+        print(train_df.columns)
         # dropされているかもしれないtrain_df
         dropped_index = train_df.index
 
@@ -92,20 +95,8 @@ class EnsembleRunnerBase:
         raise Exception("Implement please.")
 
 
-class SingleEnsembleRunnerBase(EnsembleRunnerBase):
-    """回帰、2クラス分類用アンサンブル基底クラス."""
-
-    def _create_datasets(self, output_list):
-        train_df = pd.DataFrame()
-        test_df = pd.DataFrame()
-        for i, output in enumerate(output_list):
-            train_df[f"pred{i+1}"] = output["oof_raw_pred"]
-            test_df[f"pred{i+1}"] = output["raw_pred"]
-        return train_df, test_df
-
-
-class MultiEnsembleRunnerBase(EnsembleRunnerBase):
-    """多クラス分類用アンサンブル基底クラス"""
+class EnsembleRunnerBase(_EnsembleRunnerBase):
+    """回帰、binary, multiクラス分類用アンサンブル基底クラス."""
 
     def _create_datasets(self, output_list):
         """基本的にはoutput_listを使う.もとの特徴量を使いたい場合はtrain,testから引っ張ってくる."""
@@ -113,9 +104,14 @@ class MultiEnsembleRunnerBase(EnsembleRunnerBase):
         test_df = pd.DataFrame()
         for i, output in enumerate(output_list):
             oof_raw_pred = np.array(output["oof_raw_pred"])
+            raw_pred = np.array(output["raw_pred"])
+            if len(oof_raw_pred.shape) == 1:
+                raw_pred = np.expand_dims(raw_pred, 1)
+                oof_raw_pred = np.expand_dims(oof_raw_pred, -1)
+
             oof_raw_pred = pd.DataFrame(oof_raw_pred, columns=[
                                         f"pred{i}_{j}" for j in range(oof_raw_pred.shape[1])])
-            raw_pred = np.array(output["raw_pred"])
+
             raw_pred = pd.DataFrame(
                 raw_pred, columns=[f"pred{i}_{j}" for j in range(raw_pred.shape[1])])
             train_df = pd.concat([train_df, oof_raw_pred], axis=1)

@@ -18,7 +18,6 @@ class EvaluatorBase:
             pred = pred[~including_null_rows]
             raw_pred = raw_pred[~including_null_rows]
             y = y[~including_null_rows]
-        print(y)
         return self._run(y, pred, raw_pred)
 
     def _run(self, df):
@@ -77,8 +76,6 @@ class MacroF1Evaluator(EvaluatorBase):
     """macro f1_scoreで評価する."""
 
     def _run(self, y, pred, raw_pred):
-        print(y)
-        print(pred)
         return f1_score(y, pred, average='macro')
 
     def get_direction(self):

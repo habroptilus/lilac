@@ -1,7 +1,7 @@
-from lilac.ensemble.ensemble_runner_base import SingleEnsembleRunnerBase
+from lilac.ensemble.ensemble_runner_base import EnsembleRunnerBase
 
 
-class LgbmMaeEnsemble(SingleEnsembleRunnerBase):
+class LgbmMaeEnsemble(EnsembleRunnerBase):
     """LgbmMaeを使ってアンサンブルする.元の特徴量は使わない."""
 
     def __init__(self, target_col, folds_generator_flag, folds_gen_params, trainer_flag, trainer_params, model_params, use_original_features, drop_cols):

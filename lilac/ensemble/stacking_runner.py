@@ -70,6 +70,7 @@ class StackingRunner:
                 if ensemble_params:
                     # self.paramsを更新したくなかったのでこの書き方
                     updated_params = {**self.params, **ensemble_params}
+                    print(f"Updated params with: {ensemble_params}")
                 else:
                     updated_params = self.params.copy()
 
