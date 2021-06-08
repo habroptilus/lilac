@@ -4,18 +4,21 @@ from sklearn.metrics import (mean_absolute_error, mean_squared_error,
 
 
 class EvaluatorBase:
-    def __init__(self, flag, target_col):
+    def __init__(self, flag):
         self.flag = flag
-        self.target_col = target_col
 
-    def run(self, df, pred, raw_pred):
-        df = df.copy()
-        df["pred"] = pred
-        df["raw_pred"] = raw_pred
-        if sum(df["pred"].isnull()) or sum(df["raw_pred"].isnull()):
-            print("[Waring] prediction have nan. So drop and evaluate.")
-            df = df.dropna()
-        return self._run(df[[self.target_col, "pred", "raw_pred"]])
+    def run(self, y, pred, raw_pred):
+        y = np.array(y)
+        pred = np.array(pred)
+        raw_pred = np.array(raw_pred)
+        including_null_rows = np.isnan(pred)
+
+        if including_null_rows.sum() > 0:
+            print("[Waring] prediction have nan. So drop before evaluation.")
+            pred = pred[~including_null_rows]
+            raw_pred = raw_pred[~including_null_rows]
+            y = y[~including_null_rows]
+        return self._run(y, pred, raw_pred)
 
     def _run(self, df):
         raise Exception("Implement please.")
@@ -31,29 +34,29 @@ class EvaluatorBase:
 class RmsleEvaluator(EvaluatorBase):
     """RMSLEで評価する."""
 
-    def _run(self, df):
-        return np.sqrt(mean_squared_log_error(df[self.target_col], df["pred"]))
+    def _run(self,  y, pred, raw_pred):
+        return np.sqrt(mean_squared_log_error(y, pred))
 
 
 class RmseEvaluator(EvaluatorBase):
     """RMSEで評価する."""
 
-    def _run(self, df):
-        return np.sqrt(mean_squared_error(df[self.target_col], df["pred"]))
+    def _run(self,  y, pred, raw_pred):
+        return np.sqrt(mean_squared_error(y, pred))
 
 
 class MaeEvaluator(EvaluatorBase):
     """MAEで評価する."""
 
-    def _run(self, df):
-        return mean_absolute_error(df[self.target_col], df["pred"])
+    def _run(self,  y, pred, raw_pred):
+        return mean_absolute_error(y, pred)
 
 
 class AucEvaluator(EvaluatorBase):
     """AUCで評価する."""
 
-    def _run(self, df):
-        return roc_auc_score(df[self.target_col], df["raw_pred"])
+    def _run(self,  y, pred, raw_pred):
+        return roc_auc_score(y, raw_pred)
 
     def get_direction(self):
         return "maximize"
@@ -62,8 +65,8 @@ class AucEvaluator(EvaluatorBase):
 class AccuracyEvaluator(EvaluatorBase):
     """Accuracyで評価する."""
 
-    def _run(self, df):
-        return accuracy_score(df[self.target_col], df["pred"])
+    def _run(self,  y, pred, raw_pred):
+        return accuracy_score(y, pred)
 
     def get_direction(self):
         return "maximize"
@@ -72,8 +75,8 @@ class AccuracyEvaluator(EvaluatorBase):
 class MacroF1Evaluator(EvaluatorBase):
     """macro f1_scoreで評価する."""
 
-    def _run(self, df):
-        return f1_score(df[self.target_col], df["pred"], average='macro')
+    def _run(self, y, pred, raw_pred):
+        return f1_score(y, pred, average='macro')
 
     def get_direction(self):
         return "maximize"

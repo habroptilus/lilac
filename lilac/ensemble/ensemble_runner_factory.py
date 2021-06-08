@@ -10,13 +10,13 @@ from lilac.ensemble.ensemble_runners.regressors.mae import LgbmMaeEnsemble
 
 
 class EnsembleRunnerFactory:
-    def __init__(self, params):
-        self.params = params
+    def __init__(self):
         self.required_params = ["target_col",
                                 "folds_generator_flag", "folds_gen_params",
-                                "trainer_flag", "trainer_params", "model_params"]
+                                "trainer_flag", "trainer_params", "model_params",
+                                "use_original_features", "drop_cols"]
 
-    def run(self, flag):
+    def run(self, flag, params):
         # regressors
         # rmsle
         if flag == "lgbm_rmsle":
@@ -52,6 +52,6 @@ class EnsembleRunnerFactory:
         else:
             raise Exception(f"Invalid ensemble flag: {flag}")
 
-        params = {e: self.params[e]
-                  for e in self.required_params}  # 必要なものだけ取り出す
-        return Model(**params)
+        extracted_params = {e: params[e]
+                            for e in self.required_params}  # 必要なものだけ取り出す
+        return Model(**extracted_params)

@@ -5,13 +5,15 @@ import json
 class Settings:
     """とりあえずそのまま出力する."""
     settings = {
-        "config": {
+        "default": {
             "result_dir": "result",
             "features_dir": "features",
             "luigi_dir": "luigi",
             "target_col": "y",
             "evaluator_flag": "rmse",
             "feature_importance_model_flag": "lgbm_rmse",
+            "features_conf_key": "nothing",
+            "model_flag": "lgbm_rmse",
             "importance_flag": "mean",
             "null_importance_trials": 10,
             "trainer_flag": "basic",
@@ -46,7 +48,8 @@ class Settings:
             "fs_subsample": 0.8,
             "fs_min_child_weight": 1.0,
             "ts_column": "datetime",
-            "clipping": False
+            "clipping": False,
+            "use_original_features": False
         },
         "run": {
             "sample": {
@@ -66,10 +69,34 @@ class Settings:
             "single": {
                 "layers": []
             },
-            "linear": {
+            "sample": {
                 "layers": [
                     [
-                        "linear_rmse"
+                        {
+                            "model": "linear_rmse"
+                        },
+                        {
+                            "model": "lgbm_rmse",
+                            "params": {
+                                "features_conf_key": "v1_0_0",
+                                "use_original_features": True
+                            }
+                        }
+                    ],
+                    [
+                        {
+                            "model": "avg_rmse"
+                        }
+                    ]
+                ],
+                "params": {}
+            },
+            "avg": {
+                "layers": [
+                    [
+                        {
+                            "model": "avg_rmse"
+                        }
                     ]
                 ],
                 "params": {}

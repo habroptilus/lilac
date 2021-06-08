@@ -47,6 +47,8 @@ class StratifiedFoldsGenerator(FoldsGeneratorBase):
 
 
 class GroupKFoldsGenerator(FoldsGeneratorBase):
+    """sklearnのGroupKfoldはseedを指定できないので自前実装したもの."""
+
     def __init__(self, fold_num, seed, key_col):
         super().__init__(fold_num)
         self.key_col = key_col
@@ -61,10 +63,6 @@ class GroupKFoldsGenerator(FoldsGeneratorBase):
         return f"group_{self.key_col}_{self.seed}_{super().return_flag()}"
 
     class _MyGroupKFold:
-        """
-        GroupKFold with random shuffle with a sklearn-like structure
-        """
-
         def __init__(self, n_splits, shuffle, random_state):
             self.n_splits = n_splits
             self.shuffle = shuffle

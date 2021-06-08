@@ -99,12 +99,12 @@ class LgbmCvRunner:
                  model_params, folds_gen_params):
         if not model_flag.startswith("lgbm_"):
             raise RuntimeError("Feature selector flag needs to be lgbm model.")
-        self.cv = CrossValidationRunner(pred_oof=True)
+        self.cv = CrossValidationRunner(pred_oof=True, target_col=target_col)
         self.man_drop_cols = man_drop_cols
         self.model_factory = ModelFactory(model_flag, model_params)
         self.folds_generator = FoldsGeneratorFactory().run(
             folds_generator_flag, folds_gen_params)
-        self.evaluator = EvaluatorFactory(target_col).run(evaluator_flag)
+        self.evaluator = EvaluatorFactory().run(evaluator_flag)
         self.trainer = TrainerFactory(trainer_flag, trainer_params).run()
         self.evaluator_flag = evaluator_flag
 

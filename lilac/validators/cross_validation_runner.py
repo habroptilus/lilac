@@ -10,8 +10,9 @@ class CrossValidationRunner:
     multi classification: oof_pred=予測クラス, oof_pred_proba=全クラスの確率, predict=fold平均
     """
 
-    def __init__(self,  pred_oof):
+    def __init__(self,  pred_oof, target_col):
         self.pred_oof = pred_oof
+        self.target_col = target_col
 
     def run(self, labeled, folds, model_factory, trainer, evaluator):
         self.models = []
@@ -58,7 +59,7 @@ class CrossValidationRunner:
         # 評価
         output["evaluator"] = evaluator.return_flag()
         output["score"] = evaluator.run(
-            labeled, output["oof_pred"], output["oof_raw_pred"])
+            labeled[self.target_col], output["oof_pred"], output["oof_raw_pred"])
 
         return output
 

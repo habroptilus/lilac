@@ -1,20 +1,17 @@
 """lilac runコマンドの実体."""
 import json
-from pathlib import Path
-
-import pandas as pd
-
-from lilac.tasks.run_cv import RunCv
-from lilac.ensemble.stacking_runner import StackingRunner
-from lilac.tuner.tasks_runner import TasksRunnerWithOptuna
-from lilac.evaluators.evaluator_factory import EvaluatorFactory
-from lilac.utils.utils import MyEncoder
 import os
+
+from lilac.ensemble.stacking_runner import StackingRunner
+from lilac.evaluators.evaluator_factory import EvaluatorFactory
+from lilac.tasks.run_cv import RunCv
+from lilac.tuner.tasks_runner import TasksRunnerWithOptuna
+from lilac.utils.utils import MyEncoder
 
 
 def run_tasks(Task, members, n_trials,  base_params, token, app_name, channel, do_notify, do_plot, tune_fs, tune_th):
     # 使用するevaluatorからdirectionを作成
-    direction = EvaluatorFactory(base_params["target_col"]).run(
+    direction = EvaluatorFactory().run(
         base_params["evaluator_flag"]).get_direction()
     # 1段目実行
     task_runner = TasksRunnerWithOptuna(
@@ -31,23 +28,21 @@ def run_tasks(Task, members, n_trials,  base_params, token, app_name, channel, d
     return tasks, output_list
 
 
-def run_stacking(stackings, base_params, tasks, output_list):
+def run_stacking(stackings, base_params, tasks, output_list, use_original_features):
     layers = stackings["layers"]
+
     ensemble_params = stackings.get("params")
     if ensemble_params:
+        # stacking全体のパラメータを書き換える
         print(f"Update params with : {ensemble_params}")
         base_params.update(ensemble_params)
-
-    # １つ目のrunで使ったデータセットの、特徴量選択前を使う
-    # group kfoldの特徴量がない可能性があるため.
-    path = Path(tasks[0].output().path)
-    train = pd.read_csv(path.parent.parent.parent/"train.csv")
-    test = pd.read_csv(path.parent.parent.parent/"test.csv")
+        use_original_features = ensemble_params.get(
+            "use_original_features", use_original_features)
 
     # stacking
     stacking_runner = StackingRunner(
-        layers, base_params)
-    return stacking_runner.run(output_list, train, test)
+        layers, base_params, use_original_features)
+    return stacking_runner.run(output_list)
 
 
 def logging(task_results, stacking_results, members, stackings):
@@ -60,7 +55,7 @@ def logging(task_results, stacking_results, members, stackings):
             f"[{', '.join(map(str, members[i].values()))}]:\t{output['evaluator']} = {output['score']}")
 
     for layer_i, layer in enumerate(stacking_results):
-        print(f"[Layer {layer_i+1}/{layers_num}]")
+        print(f"[Layer: {layer_i+1}/{layers_num}]")
         for result_i, result in enumerate(layer):
             print(
                 f"[{stackings['layers'][layer_i][result_i]}]:\t{result['evaluator']} = {result['score']}")
@@ -69,13 +64,15 @@ def logging(task_results, stacking_results, members, stackings):
 
 def run_experiment(settings_path, key, trials, app_name, channel, notify, plot, tune_fs, tune_th, output_dir):
     with open(settings_path, "r") as f:
-        config = json.load(f)
-    base_params = config.pop("config")
+        settings = json.load(f)
+    base_params = settings.pop("default")
     base_params["settings_path"] = settings_path
 
-    members = config["run"][key]["members"]
-    stackings = config["stacking"][config["run"][key]["stacking_key"]]
+    members = settings["run"][key]["members"]
+    stackings = settings["stacking"][settings["run"][key]["stacking_key"]]
     token = os.environ["SLACK_TOKEN"]
+    # luigiのパラメータではないのでpopしておく
+    use_original_features = base_params.pop("use_original_features")
 
     # tasks実行
     tasks, task_results = run_tasks(RunCv, members, trials,
@@ -83,7 +80,7 @@ def run_experiment(settings_path, key, trials, app_name, channel, notify, plot, 
 
     # stacking実行
     stacking_results = run_stacking(
-        stackings, base_params, tasks, task_results)
+        stackings, base_params, tasks, task_results, use_original_features)
 
     # logging
     logging(task_results, stacking_results, members, stackings)
