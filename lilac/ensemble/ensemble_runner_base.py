@@ -32,7 +32,6 @@ class _EnsembleRunnerBase:
             train_dropped = train.drop(self.drop_cols, axis=1)
 
             train_cols = list(train_dropped.columns)
-            print(train_cols)
             train_cols.remove(self.target_col)
             test_dropped = test[train_cols]
             # 元のデータセットと結合する

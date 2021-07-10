@@ -107,6 +107,7 @@ class LgbmCvRunner:
         self.evaluator = EvaluatorFactory().run(evaluator_flag)
         self.trainer = TrainerFactory(trainer_flag, trainer_params).run()
         self.evaluator_flag = evaluator_flag
+        self.target_col = target_col
 
     def run(self, df):
         """
@@ -126,4 +127,4 @@ class LgbmCvRunner:
         return output
 
     def return_flag(self):
-        return f"{self.model_factory.run().return_flag()}_{self.trainer.return_flag()}_{self.folds_generator.return_flag()}_{self.evaluator_flag}"
+        return f"{self.model_factory.run().return_flag()}_{self.trainer.return_flag()}_{self.folds_generator.return_flag()}_{self.evaluator_flag}_{self.target_col}"
