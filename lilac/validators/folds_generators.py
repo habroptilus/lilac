@@ -91,7 +91,7 @@ class StratifiedGroupKFold(FoldsGeneratorBase):
         self.seed = seed
 
     def run(self, data):
-        y = data[self.target_col]
+        y = data[self.target_col].astype(int)
         X = data.drop(self.target_col, axis=1)
         return self._stratified_group_k_fold(X=X, y=y, groups=X[self.key_col], k=self.fold_num, seed=self.seed)
 
