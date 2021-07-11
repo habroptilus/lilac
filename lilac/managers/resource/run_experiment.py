@@ -9,14 +9,18 @@ from lilac.tuner.tasks_runner import TasksRunnerWithOptuna
 from lilac.utils.utils import MyEncoder
 
 
-def run_tasks(Task, members, n_trials,  base_params, token, app_name, channel, do_notify, do_plot, tune_fs, tune_th):
+def run_tasks(Task, members, n_trials,  base_params, token, app_name, channel, do_notify, do_plot, tune_fs, tune_th, template_params):
     # 使用するevaluatorからdirectionを作成
     direction = EvaluatorFactory().run(
         base_params["evaluator_flag"]).get_direction()
+
+    # templateを展開する
+    resolved_members = resolve_template(members, template_params)
+
     # 1段目実行
     task_runner = TasksRunnerWithOptuna(
         Task, direction, base_params["seed"], token, app_name, channel, do_notify, do_plot, tune_fs, tune_th)
-    tasks = task_runner.run(base_params, members, n_trials)
+    tasks = task_runner.run(base_params, resolved_members, n_trials)
 
     # 結果取り出し
     output_list = []
@@ -26,6 +30,24 @@ def run_tasks(Task, members, n_trials,  base_params, token, app_name, channel, d
             cv_output = json.load(f)
         output_list.append(cv_output)
     return tasks, output_list
+
+
+def resolve_template(members, template_params):
+    """memberにtemplate設定をしているものを解決する.
+    templateキーを持っていたらその設定に展開する.
+    その場合、さらにparamsキーを持っていたらそれで上書きする.
+    templateキーを持っていない場合はそのまま用いる(paramsキーはいらない)
+    """
+    resolved_members = []
+    for member_params in members:
+        if "template" in member_params:
+            resolved = template_params[member_params["template"]]
+            if "params" in member_params:
+                resolved.update(member_params["params"])
+            resolved_members.append(resolved)
+        else:
+            resolved_members.append(member_params)
+    return resolved_members
 
 
 def run_stacking(stackings, base_params, tasks, output_list, use_original_features):
@@ -69,14 +91,15 @@ def run_experiment(settings_path, key, trials, app_name, channel, notify, plot, 
     base_params["settings_path"] = settings_path
 
     members = settings["run"][key]["members"]
-    stackings = settings["stacking"][settings["run"][key]["stacking_key"]]
+    stackings = settings["stackings"][settings["run"][key]["stacking_key"]]
+    template_params = settings["templates"]
     token = os.environ["SLACK_TOKEN"]
     # luigiのパラメータではないのでpopしておく
     use_original_features = base_params.pop("use_original_features")
 
     # tasks実行
     tasks, task_results = run_tasks(RunCv, members, trials,
-                                    base_params, token, app_name, channel, notify, plot, tune_fs, tune_th)
+                                    base_params, token, app_name, channel, notify, plot, tune_fs, tune_th, template_params)
 
     # stacking実行
     stacking_results = run_stacking(

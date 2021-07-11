@@ -50,7 +50,10 @@ class TasksRunnerWithOptuna:
         tasks = []
         for i, member_params in enumerate(members):
             print(
-                f"[{i+1}/{len(members)}] ({member_params['features_conf_key']},{member_params['model_flag']})")
+                f"[{i+1}/{len(members)}]")
+            for k, v in member_params.items():
+                print(f"{k} = {v}")
+
             params = base_params.copy()
             params.update(member_params)
 
