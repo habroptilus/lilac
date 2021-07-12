@@ -34,7 +34,7 @@ class KmeansVectorizer:
     def __init__(self, n_clusters, seed, col_prefix="kmeans"):
         self.n_clusters = n_clusters
         self.seed = seed
-        self.col_prefix
+        self.col_prefix = col_prefix
 
     def fit(self, df):
         self.model = KMeans(n_clusters=self.n_clusters,

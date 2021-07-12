@@ -24,6 +24,7 @@ def null_category_columns_remove(df):
 
 
 def plot_feature_importance(df, path, max_n=20):
+    plt.figure()
     # 特徴量数(説明変数の個数)
     n = len(df)
     df_plot = df.sort_values('importance')
