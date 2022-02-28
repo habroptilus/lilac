@@ -65,7 +65,7 @@ class Settings:
         "features": {
             "nothing": []
         },
-        "stacking": {
+        "stackings": {
             "single": {
                 "layers": []
             },
@@ -101,7 +101,8 @@ class Settings:
                 ],
                 "params": {}
             }
-        }
+        },
+        "template": {}
     }
 
     def __init__(self, output_path):
